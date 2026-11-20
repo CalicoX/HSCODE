@@ -1,0 +1,50 @@
+<svg width="1600" height="600" viewBox="0 0 1600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="600" rx="24" fill="#F3F6FD"/>
+  <ellipse cx="250" cy="470" rx="280" ry="180" fill="#E6EEFB"/>
+  <ellipse cx="1380" cy="120" rx="240" ry="160" fill="#E6EEFB"/>
+
+  <g transform="translate(56 92)">
+    <rect width="980" height="416" rx="20" fill="#FFFFFF" stroke="#E3EAF6"/>
+    <rect x="22" y="18" width="936" height="36" rx="9" fill="#F6F8FC" stroke="#E6ECF5"/>
+    <circle cx="44" cy="36" r="4.5" fill="#D5DEEC"/>
+    <circle cx="60" cy="36" r="4.5" fill="#D5DEEC"/>
+    <circle cx="76" cy="36" r="4.5" fill="#D5DEEC"/>
+    <rect x="100" y="26" width="214" height="20" rx="10" fill="#FFFFFF" stroke="#E6ECF5"/>
+    <text x="118" y="40" fill="#8B95A8" font-family="Inter, Arial, sans-serif" font-size="12">17track.net/en/zip-codes</text>
+
+    <rect x="22" y="72" width="936" height="52" rx="11" fill="#FFFFFF" stroke="#003A9B" stroke-width="1.5"/>
+    <circle cx="48" cy="98" r="8" stroke="#8B95A5" stroke-width="1.6"/>
+    <path d="M54 104l5 5" stroke="#8B95A5" stroke-width="1.6" stroke-linecap="round"/>
+    <text x="70" y="104" fill="#14181F" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="600">33101</text>
+    <rect x="808" y="82" width="132" height="32" rx="8" fill="#003A9B"/>
+    <text x="874" y="103" text-anchor="middle" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600">Look up</text>
+
+    <rect x="22" y="142" width="936" height="112" rx="12" fill="#F4F7FE"/>
+    <text x="42" y="188" fill="#14181F" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="700">33101</text>
+    <rect x="164" y="166" width="90" height="26" rx="13" fill="#FFFFFF"/>
+    <text x="209" y="184" text-anchor="middle" fill="#0F3577" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="600">Standard</text>
+    <text x="42" y="224" fill="#6C757D" font-family="Inter, Arial, sans-serif" font-size="15">Miami · Miami-Dade County · Florida</text>
+
+    <rect x="22" y="272" width="454" height="122" rx="12" fill="#FFFFFF" stroke="#E6ECF5"/>
+    <rect x="492" y="272" width="466" height="122" rx="12" fill="#FFFFFF" stroke="#E6ECF5"/>
+    <text x="42" y="316" fill="#6C757D" font-family="Inter, Arial, sans-serif" font-size="13">City</text>
+    <text x="42" y="350" fill="#14181F" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="650">Miami</text>
+    <text x="512" y="316" fill="#6C757D" font-family="Inter, Arial, sans-serif" font-size="13">County</text>
+    <text x="512" y="350" fill="#14181F" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="650">Miami-Dade</text>
+  </g>
+
+  <g transform="translate(1100 150)">
+    <text x="0" y="42" fill="#14181F" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="750">Find a US</text>
+    <text x="0" y="94" fill="#14181F" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="750">ZIP Code</text>
+    <rect x="0" y="122" width="52" height="6" rx="3" fill="#003A9B"/>
+    <text x="0" y="170" fill="#4A5260" font-family="Inter, Arial, sans-serif" font-size="18">City, county and region</text>
+    <text x="0" y="198" fill="#4A5260" font-family="Inter, Arial, sans-serif" font-size="18">in one lookup.</text>
+    <g transform="translate(0 232)">
+      <rect width="150" height="40" rx="20" fill="#FFFFFF" stroke="#D7E2F4"/>
+      <circle cx="24" cy="20" r="6" fill="#003A9B"/>
+      <text x="38" y="25" fill="#212529" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600">33101</text>
+      <rect x="164" width="138" height="40" rx="20" fill="#FFFFFF" stroke="#D7E2F4"/>
+      <text x="188" y="25" fill="#212529" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="600">Florida</text>
+    </g>
+  </g>
+</svg>
