@@ -51,6 +51,10 @@ Content is capped at 1440px with 24px side padding. The ad banner reflows by
 container query: 320×50, 468×60, 728×90, then 970×90 on wide screens. The nav
 collapses to a menu button below 1024px.
 
+The hero is a two-column grid: copy and lookup card on the left, a 300×600
+rail ad on the right. Below 1024px the rail ad is hidden and the banner slot
+keeps the full width.
+
 ## Data
 
 Chapter 01 carries the full six-digit dataset. Other chapters hold a small
