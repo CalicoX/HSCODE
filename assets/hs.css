@@ -13,6 +13,18 @@
   overscroll-behavior:contain;
 }
 
+/* ===== Mobile menu =====
+   Same problem as the mega panel: fourteen links make a ~700px panel, so on a
+   667px-tall phone the Sign up and Shopify buttons fell off the bottom with no
+   way to reach them. Give the list its own scroll inside a capped panel. */
+.menu-panel{max-height:calc(100dvh - 96px);overflow:hidden;padding:8px}
+.menu-panel-inner{
+  display:flex;flex-direction:column;gap:0;
+  max-height:calc(100dvh - 112px);
+  overflow-y:auto;overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+
 /* ===== Hero ===== */
 .hs-hero{
   position:relative;overflow:hidden;color:#fff;
@@ -104,6 +116,12 @@
 }
 .hs-field-head label{font-size:13.5px;font-weight:600;color:var(--ink-2)}
 .hs-field-head span{font-size:11.5px;color:var(--muted);white-space:nowrap}
+/* On phones the hint is too wide to sit beside the label: the label ends up
+   squeezed onto three lines. Stack them instead. */
+@media (max-width:599px){
+  .hs-field-head{flex-direction:column;align-items:flex-start;gap:3px}
+  .hs-field-head span{white-space:normal;font-size:11px}
+}
 .hs-textarea{
   display:block;width:100%;min-height:92px;max-height:176px;resize:none;
   padding:12px 14px;border:1px solid #dfe3ea;border-radius:8px;
@@ -655,9 +673,24 @@
   .hs-anat-row .hs-group:nth-child(n+3){padding-top:22px;border-top:1px solid var(--line-soft)}
 }
 @media (max-width:559px){
+  /* One group per row, digits beside the caption instead of stacked above it.
+     Stacking left the right half of every row empty and stretched ten digits
+     down the screen. */
   .hs-anat-row{grid-template-columns:minmax(0,1fr);gap:0}
-  .hs-anat-row .hs-group{padding:18px 0;border-left:0;border-top:1px solid var(--line-soft)}
+  .hs-anat-row .hs-group{
+    flex-direction:row;flex-wrap:wrap;align-items:center;gap:14px;row-gap:9px;
+    padding:14px 0;border-left:0;border-top:1px solid var(--line-soft);
+  }
   .hs-anat-row .hs-group:first-child{padding-top:0;border-top:0}
+  .hs-anat-row .hs-group:nth-child(n+3){padding-top:14px}
+  .hs-anat-row .hs-group:last-child{padding-bottom:0}
+  .hs-anat-row .hs-group-digits{flex:0 0 auto;gap:5px}
+  /* The caption needs about 84px to keep "US HTS line" on one line. Below that
+     it drops to its own full-width row instead of breaking mid-phrase. */
+  .hs-anat-row .hs-group-cap{flex:1 1 84px;min-width:0;justify-content:center}
+  .hs-digit{width:clamp(29px,7.8vw,36px);height:clamp(35px,9.2vw,42px);font-size:13.5px}
+  .hs-strip{padding:20px 18px 18px}
+  .hs-anat-legend{margin-top:16px;padding-top:14px;gap:6px 16px}
 }
 .hs-anatomy-notes{
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
@@ -772,7 +805,6 @@
 @media (max-width:559px){
   .hs-hero-inner{padding-top:36px;padding-bottom:36px}
   .hs-hero h1{font-size:28px;line-height:1.12}
-  .hs-digit{width:36px;height:42px;font-size:14px}
   .hs-tool .hs-chips{display:flex;flex-wrap:wrap;gap:8px}
   .hs-tool .hs-chip{width:auto;padding:0 13px;white-space:nowrap}
   .hs-refine .hs-chips{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
