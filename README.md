@@ -27,7 +27,7 @@ index.html            Page markup: notice bar, header, hero, results, chapters, 
 assets/site.css       17TRACK design system: tokens, header, nav, footer, buttons
 assets/hs.css         Page layer: lookup card, candidate cards, tables, chapter wizard, ad slot
 assets/app.js         Search, refine chips, destination tabs, chapter drill-down, clipboard
-assets/hs-data.js     Demo dataset: chapters, headings, subheadings, US/EU/CN tariff rows
+assets/hs-data.js     Demo dataset: chapters, headings, subheadings, US tariff rows
 assets/globe.js       Animated dot-sphere in the hero
 assets/ads/           Responsive ad banner (320×50 → 970×90)
 assets/fonts/         Inter (latin subset)
@@ -39,8 +39,11 @@ assets/nav/           Nav preview artwork
 
 - **Search** by description ("cotton T-shirt") or code ("610910"), then refine
   the candidate list with the filter chips.
-- **Destination tabs** switch the tariff schedule between US (HTSUS), EU (CN)
-  and China. Movement toggles between import and export.
+- **Movement and destination chips** sit above the search field: Import or
+  Export, and United States as the destination. The choice carries through to
+  the result table.
+- **Heading dropdowns** in the results list open a six-digit subheading menu,
+  the same way the chapter panel does.
 - **Chapter drill-down** opens a panel that walks chapter → four-digit heading →
   six-digit subheading, ending in a copyable answer card.
 - **FAQ** is a native `<details>` accordion; one panel is open at a time.

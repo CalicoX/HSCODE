@@ -65,23 +65,19 @@
   width:100%;max-width:970px;margin-top:18px;
 }
 .banner-ad{
-  width:320px;height:50px;margin:0 auto;
+  width:320px;max-width:100%;height:50px;margin:0 auto;
   overflow:hidden;background:#091a47;border:0;
 }
 .banner-ad a,.banner-ad img{display:block;width:100%;height:100%}
 .banner-ad img{object-fit:contain}
-@container (min-width:468px){.banner-ad{width:468px;height:60px}}
+/* From 468px up the slot is wider than the banner, so the banner shares the
+   lookup card's left edge instead of floating in the middle of it. Only the
+   smallest 320 x 50 slot stays centered, where the card is barely wider. */
+@container (min-width:468px){.banner-ad{width:468px;height:60px;margin-left:0;margin-right:auto}}
 @container (min-width:728px){.banner-ad{width:728px;height:90px}.banner-ad img{object-fit:cover}}
-/* At 970 the slot is wider than the 820px lookup card, so centering would push
-   it out of line: drop the auto margins and share the card's left edge. */
-@container (min-width:970px){.banner-ad{width:970px;height:90px;margin-left:0;margin-right:auto}.banner-ad img{object-fit:cover}}
-/* Under 374px the card is narrower than the smallest 320 x 50 slot. Slide the
-   slot left so it stays centered and never runs past the page padding. */
-@media (max-width:374px){
-  .banner-ad{margin-left:calc((100% - 320px) / 2);margin-right:0}
-}
+@container (min-width:970px){.banner-ad{width:970px;height:90px}.banner-ad img{object-fit:cover}}
 /* While the 970 slot does not fit, match the lookup card's 820px box so the
-   centered banner lines up with the card instead of the wider shell. */
+   banner lines up with the card instead of the wider shell. */
 @media (max-width:1017px){
   .hs-ad{max-width:820px}
 }
@@ -100,17 +96,16 @@
   gap:6px 20px;margin-top:9px;
 }
 .hs-tool-bottom{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) 172px;
-  gap:14px 24px;align-items:end;
+  display:flex;flex-wrap:wrap;flex-direction:column;
+  gap:10px;
   margin-top:16px;padding-top:16px;border-top:1px solid var(--line-soft);
 }
-.hs-opt-row{display:flex;flex-wrap:wrap;gap:14px 32px;align-items:flex-start}
+.hs-opt-row{display:flex;flex-wrap:wrap;gap:14px 32px;align-items:flex-start;margin-bottom:16px}
 .hs-opt{min-width:0}
-.hs-action{min-width:0}
+.hs-action{align-self:flex-end;width:172px;min-width:0}
 .hs-action .btn{width:100%}
 .hs-fine{
-  grid-column:1 / -1;margin:0;
+  margin:0;
   font-size:11.5px;line-height:1.6;color:var(--muted);
 }
 .hs-field-head{
@@ -304,6 +299,8 @@
 }
 .hs-refine h3{margin:0 0 4px;font-size:15px;font-weight:600;color:var(--ink)}
 .hs-refine .sub{font-size:13px;line-height:1.6;color:var(--muted)}
+.hs-refine .sub a{color:var(--brand);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+.hs-refine .sub a:hover{color:var(--brand-hover)}
 .hs-refine-q{margin:14px 0 10px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
 .hs-refine-feedback{
   display:flex;align-items:flex-start;gap:8px;
@@ -537,14 +534,15 @@
 }
 /* Heading browse keeps its list inline as a second-column block. */
 .tree-row > .tree-menu{grid-column:2}
-/* Inside the chapter panel the three steps are a real dropdown: the option
-   list floats over the panel instead of pushing the next level down, so
-   chapter, heading and subheading stay visible while you pick. */
-.chapter-panel .tree-field{position:relative;min-width:0}
-.chapter-panel .tree-field:has(.tree-menu){z-index:40}
-.chapter-panel .tree-select svg{transition:transform .16s ease}
-.chapter-panel .tree-select[aria-expanded="true"] svg{transform:rotate(180deg)}
-.chapter-panel .tree-menu{
+/* Inside the chapter panel and the heading browse the steps are a real
+   dropdown: the option list floats over the panel instead of pushing the next
+   level down, so chapter, heading and subheading stay visible while you pick. */
+.chapter-panel .tree-field,.hs-tree .tree-field{position:relative;min-width:0}
+.chapter-panel .tree-field:has(.tree-menu),.hs-tree .tree-field:has(.tree-menu){z-index:40}
+.chapter-panel .tree-select svg,.hs-tree .tree-select svg{transition:transform .16s ease}
+.chapter-panel .tree-select[aria-expanded="true"] svg,
+.hs-tree .tree-select[aria-expanded="true"] svg{transform:rotate(180deg)}
+.chapter-panel .tree-menu,.hs-tree .tree-menu{
   position:absolute;z-index:40;left:0;right:0;top:calc(100% + 6px);
   max-height:min(340px,52vh);overflow-y:auto;overscroll-behavior:contain;
   padding:6px;gap:2px;
@@ -560,25 +558,25 @@
   from{opacity:0;transform:translateY(-6px) scale(.985)}
   to{opacity:1;transform:none}
 }
-.chapter-panel .tree-opt{
+.chapter-panel .tree-opt,.hs-tree .tree-opt{
   border:0;border-radius:6px;background:transparent;min-height:0;padding:9px 10px;
   font-size:13.5px;line-height:1.45;
   animation:tree-opt-in .2s ease both;
 }
 /* Stagger the rows so the panel unfolds top-down instead of popping. */
-.chapter-panel .tree-opt:nth-child(1){animation-delay:24ms}
-.chapter-panel .tree-opt:nth-child(2){animation-delay:36ms}
-.chapter-panel .tree-opt:nth-child(3){animation-delay:48ms}
-.chapter-panel .tree-opt:nth-child(4){animation-delay:60ms}
-.chapter-panel .tree-opt:nth-child(5){animation-delay:72ms}
-.chapter-panel .tree-opt:nth-child(n+6){animation-delay:84ms}
+.chapter-panel .tree-opt:nth-child(1),.hs-tree .tree-opt:nth-child(1){animation-delay:24ms}
+.chapter-panel .tree-opt:nth-child(2),.hs-tree .tree-opt:nth-child(2){animation-delay:36ms}
+.chapter-panel .tree-opt:nth-child(3),.hs-tree .tree-opt:nth-child(3){animation-delay:48ms}
+.chapter-panel .tree-opt:nth-child(4),.hs-tree .tree-opt:nth-child(4){animation-delay:60ms}
+.chapter-panel .tree-opt:nth-child(5),.hs-tree .tree-opt:nth-child(5){animation-delay:72ms}
+.chapter-panel .tree-opt:nth-child(n+6),.hs-tree .tree-opt:nth-child(n+6){animation-delay:84ms}
 @keyframes tree-opt-in{
   from{opacity:0;transform:translateY(-3px)}
   to{opacity:1;transform:none}
 }
 /* Exit runs before the panel re-renders, so the list fades out instead of
    vanishing when the menu closes. */
-.chapter-panel .tree-menu.is-leaving{
+.chapter-panel .tree-menu.is-leaving,.hs-tree .tree-menu.is-leaving{
   pointer-events:none;
   animation:tree-drop-out .12s ease-in both;
 }
@@ -586,10 +584,11 @@
   from{opacity:1;transform:none}
   to{opacity:0;transform:translateY(-4px) scale(.99)}
 }
-.chapter-panel .tree-opt:hover,.chapter-panel .tree-opt:focus-visible{
+.chapter-panel .tree-opt:hover,.chapter-panel .tree-opt:focus-visible,
+.hs-tree .tree-opt:hover,.hs-tree .tree-opt:focus-visible{
   background:var(--brand-wash);border:0;
 }
-.chapter-panel .tree-opt + .tree-opt{margin-top:0}
+.chapter-panel .tree-opt + .tree-opt,.hs-tree .tree-opt + .tree-opt{margin-top:0}
 .tree-opt{
   display:flex;align-items:flex-start;gap:10px;min-height:40px;
   padding:8px 11px;border:1px solid var(--line);border-radius:7px;
@@ -769,8 +768,8 @@
   .hs-hero .zip-globe{top:-26%;right:-22vw;width:106vw;height:180%;opacity:.5}
   .hs-hero h1{font-size:40px}
   .hs-lede{font-size:16.5px;line-height:26px}
-  .hs-tool-bottom{grid-template-columns:minmax(0,1fr);gap:20px}
-  .hs-action{margin-top:2px}
+  .hs-tool-bottom{gap:10px}
+  .hs-action{align-self:stretch;width:auto;margin-top:2px}
   .hs-cands{grid-template-columns:minmax(0,1fr)}
   .hs-chap-list{grid-template-columns:minmax(0,1fr)}
   .chapter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -797,7 +796,7 @@
   .tree-row{grid-template-columns:minmax(0,1fr);gap:6px}
   .tree-k{padding-top:0}
   .tree-menu{grid-column:1}
-  .chapter-panel .tree-menu{left:0;right:0}
+  .chapter-panel .tree-menu,.hs-tree .tree-menu{left:0;right:0}
 }
 @media (max-width:599px){
   .hs-results{padding-top:26px}

@@ -52,6 +52,9 @@
     CN: { id: 'CN', name: 'China', system: 'China Tariff', digits: 10 }
   };
 
+  /* Destinations offered in the lookup form and the result tabs. */
+  var DESTINATIONS = ['US'];
+
   var ICON = {
     search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
     copy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>',
@@ -93,7 +96,8 @@
     movement: null,
     localCountry: null,
     localDetail: {},
-    wizard: null
+    wizard: null,
+    treeOpen: null
   };
 
   /* ---------------------------------------------------------------- helpers */
@@ -220,7 +224,6 @@
   var REFINE = {
     apparel: {
       question: 'How is the garment made?',
-      help: 'Construction decides the chapter, so one answer usually removes an option.',
       options: [
         { id: 'knitted', label: 'Knitted or crocheted' },
         { id: 'woven', label: 'Woven' },
@@ -234,7 +237,6 @@
     },
     tableware: {
       question: 'What is the body made of?',
-      help: 'Porcelain and other ceramics sit under different subheadings in the same chapter.',
       options: [
         { id: 'porcelain', label: 'Porcelain or china' },
         { id: 'ceramic', label: 'Stoneware or other ceramic' },
@@ -446,7 +448,7 @@
 
     return '<div class="hs-refine">' +
       '<h3>Help narrow down the results</h3>' +
-      '<p class="sub">' + esc(config.help) + '</p>' +
+      '<p class="sub">If none of these fit, <a href="#chapters" data-browse>browse by chapter below</a> and drill down from the schedule instead.</p>' +
       '<p class="hs-refine-q" id="refine-q">' + esc(config.question) + '</p>' +
       '<div class="hs-chips" role="group" aria-labelledby="refine-q">' + chips + '</div>' +
       feedback +
@@ -558,7 +560,7 @@
     var data = localRows(code, countryId);
     var movement = state.movement === 'export' ? 'Export' : 'Import';
 
-    var tabs = ['US', 'EU', 'CN'].map(function (id) {
+    var tabs = DESTINATIONS.map(function (id) {
       var on = id === countryId;
       return '<button class="hs-tab" type="button" role="tab" data-local-country="' + id + '" aria-selected="' + on + '">' +
         esc(COUNTRIES[id].name) + '</button>';
@@ -566,7 +568,9 @@
 
     var head = '<div class="hs-local-head">' +
       '<h3>' + movement + ' lines · ' + esc(country.name) + '</h3>' +
-      '<div class="hs-tabs" role="tablist" aria-label="Destination">' + tabs + '</div>' +
+      (DESTINATIONS.length > 1
+        ? '<div class="hs-tabs" role="tablist" aria-label="Destination">' + tabs + '</div>'
+        : '') +
       '</div>' +
       '<p class="hs-local-note">' + ICON.info +
         '<span>' + esc(country.system) + ' · ' + country.digits + ' digits. ' + esc(data.note || '') + '</span>' +
@@ -660,13 +664,14 @@
     var detailId = 'detail-code-' + entry.code;
     var country = state.localCountry || state.destCountry || 'US';
 
+    // The classification path already sits above the actions, so only the
+    // expandable detail block is added here.
     var details = entry.detail && (entry.detail.build || entry.detail.mixup || entry.detail.note)
       ? '<div class="hs-detail" id="' + detailId + '"' + (open ? '' : ' hidden') + '>' +
-          pathHTML(entry) +
           (entry.plain ? '<p>' + esc(entry.plain) + '</p>' : '') +
           verifyHTML(entry.verify, 'Check before you choose') +
         '</div>'
-      : pathHTML(entry);
+      : '';
 
     return '<div class="hs-cands is-single">' +
         '<article class="hs-cand is-primary">' +
@@ -741,6 +746,7 @@
     }
 
     var rows = tree.heads.map(function (head) {
+      var open = state.treeOpen === head.code;
       var list = head.subs.length
         ? head.subs.map(function (sub) {
             return '<button class="tree-opt" type="button" data-pick="' + esc(sub.code) + '">' +
@@ -750,16 +756,21 @@
 
       return '<div class="tree-row">' +
         '<span class="tree-k">Heading ' + esc(head.code) + '</span>' +
-        '<button class="tree-select" type="button" data-hier aria-expanded="true">' +
-          '<code>' + esc(head.code) + '</code>' +
-          '<span class="tree-name">' + esc(head.title || 'Heading') + '</span>' +
-          ICON.chevron +
-        '</button>' +
-        '<div class="tree-menu">' + list + '</div>' +
+        // Same field-with-floating-menu pattern as the chapter panel: the
+        // subheading list drops over the content instead of pushing the rows
+        // below it down.
+        '<div class="tree-field">' +
+          '<button class="tree-select" type="button" data-tree-open="' + esc(head.code) + '" aria-expanded="' + (open ? 'true' : 'false') + '">' +
+            '<code>' + esc(head.code) + '</code>' +
+            '<span class="tree-name">' + esc(head.title || 'Heading') + '</span>' +
+            ICON.chevron +
+          '</button>' +
+          (open ? '<div class="tree-menu">' + list + '</div>' : '') +
+        '</div>' +
         '</div>';
     }).join('');
 
-    return intro + '<div class="cp-tree" style="margin-top:18px">' + rows + '</div>';
+    return intro + '<div class="cp-tree hs-tree" style="margin-top:18px">' + rows + '</div>';
   }
 
   function chaptersHTML(result) {
@@ -879,6 +890,7 @@
     state.destCode = null;
     state.localCountry = null;
     state.localDetail = {};
+    state.treeOpen = null;
 
     setLoading(true);
     var token = ++searchToken;
@@ -1238,6 +1250,11 @@
       state.wizard.open = null;
       renderChapterPanel(false);
     }
+    // Same for the heading dropdown in the results list.
+    if (state.treeOpen && !event.target.closest('.hs-tree .tree-field')) {
+      state.treeOpen = null;
+      render();
+    }
     if (!button) return;
     var data = button.dataset;
 
@@ -1266,6 +1283,9 @@
     }
 
     if (data.browse !== undefined) {
+      // The link also works without JS; when JS runs, keep the smooth scroll
+      // instead of letting the browser jump the anchor into place.
+      event.preventDefault();
       var chapters = document.getElementById('chapters');
       if (chapters) chapters.scrollIntoView({ behavior: motionOK() ? 'smooth' : 'auto', block: 'start' });
       return;
@@ -1295,6 +1315,14 @@
     if (data.chapterClose !== undefined) {
       state.wizard = null;
       renderChapterPanel(false);
+      return;
+    }
+
+    if (data.treeOpen !== undefined) {
+      state.treeOpen = state.treeOpen === data.treeOpen ? null : data.treeOpen;
+      render();
+      var opened = document.querySelector('[data-tree-open="' + data.treeOpen + '"]');
+      if (opened && state.treeOpen) opened.focus({ preventScroll: true });
       return;
     }
 

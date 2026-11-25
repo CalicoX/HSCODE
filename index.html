@@ -86,7 +86,7 @@
               <div class="nav-mega-shot nav-mega-hs" aria-hidden="true">
                 <div class="nshot-code"><span class="nshot-seg">6109</span><span class="nshot-seg nshot-seg-rest">10</span><span class="nshot-seg nshot-seg-local">0010</span></div>
                 <p class="nshot-label">T-shirts, singlets and other vests — cotton, knitted</p>
-                <div class="nshot-rows"><span>US HTS</span><span>EU TARIC</span><span>China</span></div>
+                <div class="nshot-rows"><span>US HTS</span></div>
               </div>
               <p>Describe the product or drill from chapter to six digits, then pick a destination to see the local tariff line and duty rate.</p>
               <a class="nav-mega-more" href="index.html">View more<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
@@ -158,12 +158,27 @@
         <p class="hs-lede">Find the right HS code in seconds — describe the product, or drill from chapter to six digits, then pick a destination for the local line.</p>
         <div class="hs-meta">
           <span>6 digits shared internationally</span>
-          <span>Local lines for US, EU and China</span>
+          <span>Local lines for the United States</span>
           <span>Chapter to subheading drill-down</span>
         </div>
 
         <div class="hs-tool">
           <form id="search-form" novalidate>
+            <div class="hs-opt-row">
+              <div class="hs-opt">
+                <span class="hs-label" id="ctx-title">Goods moving <span class="hs-pill-soft">Optional</span></span>
+                <div class="hs-chips" role="group" aria-labelledby="ctx-title">
+                  <button class="hs-chip" type="button" data-move="import" aria-pressed="false">Import</button>
+                  <button class="hs-chip" type="button" data-move="export" aria-pressed="false">Export</button>
+                </div>
+              </div>
+              <div class="hs-opt">
+                <span class="hs-label" id="ctx-dest">Destination <span class="hs-pill-soft">Optional</span></span>
+                <div class="hs-chips" role="group" aria-labelledby="ctx-dest">
+                  <button class="hs-chip" type="button" data-market="US" aria-pressed="false">United States</button>
+                </div>
+              </div>
+            </div>
             <div class="hs-field-head">
               <label for="query">Product description or HS code</label>
               <span>Numbers and English only</span>
@@ -195,23 +210,6 @@
             </p>
 
             <div class="hs-tool-bottom">
-              <div class="hs-opt-row">
-                <div class="hs-opt">
-                  <span class="hs-label" id="ctx-title">Goods moving <span class="hs-pill-soft">Optional</span></span>
-                  <div class="hs-chips" role="group" aria-labelledby="ctx-title">
-                    <button class="hs-chip" type="button" data-move="import" aria-pressed="false">Import</button>
-                    <button class="hs-chip" type="button" data-move="export" aria-pressed="false">Export</button>
-                  </div>
-                </div>
-                <div class="hs-opt">
-                  <span class="hs-label" id="ctx-dest">Destination <span class="hs-pill-soft">Optional</span></span>
-                  <div class="hs-chips" role="group" aria-labelledby="ctx-dest">
-                    <button class="hs-chip" type="button" data-market="US" aria-pressed="false">United States</button>
-                    <button class="hs-chip" type="button" data-market="EU" aria-pressed="false">European Union</button>
-                    <button class="hs-chip" type="button" data-market="CN" aria-pressed="false">China</button>
-                  </div>
-                </div>
-              </div>
               <div class="hs-action">
                 <button class="btn btn-primary btn-lg" type="submit" id="submit-btn">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>
@@ -326,7 +324,7 @@
         <div class="hs-anatomy-note">
           <span>Digits 7–10</span>
           <h3>Country classification</h3>
-          <p>The importing country's own extension. The US HTS adds four digits, which is why local rows run to ten — switch the destination above to see another country's rows for the same six digits.</p>
+          <p>The importing country's own extension. The US HTS adds four digits, which is why local rows run to ten. Other markets extend the same six digits in their own way.</p>
         </div>
       </div>
     </div>
