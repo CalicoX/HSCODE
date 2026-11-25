@@ -77,6 +77,7 @@
     title: document.getElementById('results-title'),
     count: document.getElementById('results-count'),
     meta: document.getElementById('results-meta'),
+    kicker: document.getElementById('results-kicker'),
     body: document.getElementById('results-body'),
     live: document.getElementById('live-status'),
     toast: document.getElementById('toast')
@@ -399,23 +400,54 @@
       '</ul></div>';
   }
 
+  // Numbered band above a result step, with an optional right-aligned hint.
+  function stepHead(num, title, hint) {
+    return '<div class="hs-step-head"><span class="hs-step-num" aria-hidden="true">' + num + '</span>' +
+      '<span class="hs-step-title">' + esc(title) + '</span>' +
+      (hint ? '<span class="hs-step-hint">' + esc(hint) + '</span>' : '') +
+      '</div>';
+  }
+
+  // Two or more candidates need an explicit picker, because the destination
+  // block below can only show the local rows for one of them.
+  function classPickerHTML(entries, code) {
+    if (!entries || entries.length < 2) return '';
+    return '<div class="hs-pick">' +
+      '<span class="hs-field-label" id="pick-label">Which six-digit candidate?</span>' +
+      '<div class="hs-pick-grid" role="radiogroup" aria-labelledby="pick-label">' +
+      entries.map(function (item) {
+        var on = item.code === code;
+        return '<button class="hs-pick-card' + (on ? ' is-on' : '') + '" type="button" role="radio" aria-checked="' + on + '" data-cand="' + esc(item.code) + '">' +
+          '<span class="hs-pick-code">' + esc(item.code) + '</span>' +
+          '<span class="hs-pick-desc">' + esc(item.short) + '</span>' +
+          (on ? '<span class="hs-pick-check" aria-hidden="true">' + ICON.check + '</span>' : '') +
+          '</button>';
+      }).join('') +
+      '</div>' +
+      '</div>';
+  }
+
   function candidateHTML(entry, isPrimary) {
     var open = !!state.expanded[entry.code];
     return '<article class="hs-cand' + (isPrimary ? ' is-primary' : '') + '">' +
       '<div class="hs-cand-top">' +
         '<div><span class="hs-code">' + esc(entry.code) + '</span>' +
-          '<span class="hs-code-meta">HS · Chapter ' + esc(entry.chapter.num) + '</span></div>' +
+          '<span class="hs-code-meta">6-digit HS · Chapter ' + esc(entry.chapter.num) + '</span></div>' +
         (isPrimary ? '<span class="tag">Best starting point</span>' : '') +
       '</div>' +
       '<h3>' + esc(entry.short) + '</h3>' +
       (entry.plain ? '<p>' + esc(entry.plain) + '</p>' : '') +
       pathHTML(entry) +
       verifyHTML(entry.verify, 'Check before you choose') +
+      '<p class="hs-lookup-meta">' +
+        '<span><b>Data source</b>Demo dataset</span>' +
+        '<span><b>Version</b>Demo dataset</span>' +
+      '</p>' +
       '<div class="hs-cand-actions">' +
         '<button class="btn btn-outline btn-sm" type="button" data-copy="' + esc(entry.code) + '">' + ICON.copy + '<span>Copy code</span></button>' +
         (entry.detail && (entry.detail.build || entry.detail.mixup || entry.detail.note)
           ? '<button class="hs-toggle" type="button" data-toggle="' + esc(entry.code) + '" aria-expanded="' + open + '" aria-controls="detail-' + esc(entry.code) + '">' +
-            (open ? 'Hide details' : 'Classification details') + ICON.chevron + '</button>'
+            (open ? 'Hide classification details' : 'View classification details') + ICON.chevron + '</button>'
           : '') +
         '<button class="hs-toggle" type="button" data-dest="' + esc(entry.code) + '">See destination lines ' + ICON.arrow + '</button>' +
       '</div>' +
@@ -558,7 +590,6 @@
   function localTableHTML(code, countryId) {
     var country = COUNTRIES[countryId];
     var data = localRows(code, countryId);
-    var movement = state.movement === 'export' ? 'Export' : 'Import';
 
     var tabs = DESTINATIONS.map(function (id) {
       var on = id === countryId;
@@ -567,72 +598,114 @@
     }).join('');
 
     var head = '<div class="hs-local-head">' +
-      '<h3>' + movement + ' lines · ' + esc(country.name) + '</h3>' +
+      '<h3>' + (countryId === 'US' ? 'US' : esc(country.name)) +
+        (state.movement === 'export' ? ' destination lines' : ' import classifications') + '</h3>' +
       (DESTINATIONS.length > 1
         ? '<div class="hs-tabs" role="tablist" aria-label="Destination">' + tabs + '</div>'
-        : '') +
-      '</div>' +
-      '<p class="hs-local-note">' + ICON.info +
-        '<span>' + esc(country.system) + ' · ' + country.digits + ' digits. ' + esc(data.note || '') + '</span>' +
-      '</p>';
+        : '<span class="hs-local-system">' + ICON.info + esc(country.system) + ' · ' + country.digits + ' digits</span>') +
+      '</div>';
 
     if (!data.rows.length) {
       return '<div class="hs-local" id="destination">' + head +
-        '<div class="hs-empty">No local line in this demo for ' + esc(code) + ' into ' + esc(country.name) +
-        ' yet. The six-digit explanation above still applies, and another destination may be populated.</div>' +
+        '<p class="hs-local-note">' + ICON.info +
+          '<span>The demo dataset has no ' + esc(country.name) + ' rows for ' + esc(code) +
+          ' yet. The six-digit explanation still applies, and another destination may be populated.</span>' +
+        '</p>' +
+        '<p class="hs-local-verify">' + ICON.shield +
+          '<span>Try another destination, or read the six-digit explanation above.</span>' +
+        '</p>' +
         '</div>';
     }
 
-    var body = data.rows.map(function (row, index) {
+    var note = '<p class="hs-local-note">' + ICON.info +
+      '<span>' + (data.real
+        ? 'Lines from the published schedule as captured in this demo. Rates change; confirm before filing.'
+        : 'Rows use placeholder codes (' + esc(code) + ' plus four X digits) so the interaction can be tested. They are not valid for customs filing.') +
+      '</span></p>';
+
+    var headRow = '<div class="hs-local-row-head" aria-hidden="true">' +
+      '<span>Code</span><span>Description</span><span>Action</span>' +
+      '</div>';
+
+    var items = data.rows.map(function (row, index) {
       var key = countryId + '|' + code + '|' + index;
       var open = !!state.localDetail[key];
       var expandable = !!(row.detail || (row.checks && row.checks.length));
-      var duty = '';
+      var detailId = 'ld-' + key.replace(/[^a-z0-9]/gi, '-');
+
+      var action = '';
       if (countryId === 'US' && row.duty) {
-        duty = '<span class="hs-duty">' + esc(row.duty) + '</span>' +
+        action = '<span class="hs-duty">' + esc(row.duty) + '</span>' +
           (row.col2 && row.col2 !== row.duty ? '<span class="hs-duty-alt">Col. 2 ' + esc(row.col2) + '</span>' : '');
-      } else if (row.six) {
-        duty = '<span class="hs-duty-alt">Six-digit line</span>';
       } else if (row.placeholder) {
-        duty = '<span class="hs-ph">Placeholder</span>';
+        action = '<span class="hs-ph">Placeholder local code</span>';
+      } else if (row.six) {
+        action = '<span class="hs-duty-alt">Six-digit line</span>';
       }
 
-      var main = '<tr' + (expandable ? ' class="is-expandable"' : '') + '>' +
-        '<th scope="row"><span class="hs-coderow"><code class="hs-cell-code">' + esc(row.code) + '</code></span></th>' +
-        '<td>' + esc(row.desc) +
-          (expandable
-            ? '<button class="hs-toggle" type="button" data-local-toggle="' + esc(key) + '" aria-expanded="' + open + '" aria-controls="ld-' + esc(key.replace(/[^a-z0-9]/gi, '-')) + '">' +
-              (open ? 'Hide' : 'Details') + ICON.chevron + '</button>'
-            : '') +
-        '</td>' +
-        '<td>' + duty + '</td>' +
-        '</tr>';
-
-      var detail = '';
-      if (expandable && open) {
-        detail = '<tr class="hs-detail-row"><td colspan="3">' +
-          (row.detail ? '<p>' + esc(row.detail) + '</p>' : '') +
-          verifyHTML(row.checks, 'Check before you choose') +
-          '</td></tr>';
-      }
-      return main + detail;
+      return '<div class="hs-local-item">' +
+        '<div class="hs-local-main">' +
+          '<div class="hs-local-code-row">' +
+            '<span class="hs-local-code">' + esc(row.code) + '</span>' +
+            (row.placeholder && countryId !== 'US' ? '' : '') +
+          '</div>' +
+          '<div class="hs-local-desc-cell">' +
+            '<p class="hs-local-desc">' + esc(row.desc) + '</p>' +
+            (expandable
+              ? '<button class="hs-toggle" type="button" data-local-toggle="' + esc(key) + '" aria-expanded="' + open + '" aria-controls="' + detailId + '">' +
+                (open ? 'Hide details' : 'View details') + ICON.chevron + '</button>'
+              : '') +
+          '</div>' +
+          '<div class="hs-local-action">' + action + '</div>' +
+        '</div>' +
+        (expandable && open
+          ? '<div class="hs-local-detail" id="' + detailId + '">' +
+              (row.detail ? '<div><h4>What this row covers</h4><p>' + esc(row.detail) + '</p></div>' : '') +
+              verifyHTML(row.checks, 'Check before you choose') +
+            '</div>'
+          : '') +
+        '</div>';
     }).join('');
 
-    var toggle = '<div class="hs-table-toggle"><button class="hs-toggle" type="button" data-toggle-row aria-expanded="false">' +
-      'Show all rows' + ICON.chevron + '</button></div>';
+    var pickNote = '<p class="hs-local-verify">' + ICON.shield +
+      '<span>Does this description match your item? If not, add more detail and search again.</span>' +
+      '<button class="hs-toggle" type="button" data-edit>Edit search</button>' +
+      '</p>';
 
-    return '<div class="hs-local" id="destination">' + head +
-      '<div class="table-block">' +
-        '<div class="table-scroll"><table class="zip-table">' +
-          '<caption>' + esc(movement) + ' lines for HS code ' + esc(code) + ' into ' + esc(country.name) + '</caption>' +
-          '<thead><tr><th scope="col">Code</th><th scope="col">Description</th><th scope="col">Duty / source</th></tr></thead>' +
-          '<tbody>' + body + '</tbody>' +
-        '</table></div>' +
-        (data.rows.length > 6 ? toggle : '') +
-      '</div>' +
-      '<p class="hs-note">' + ICON.shield +
-        '<span>' + (data.real ? 'Lines from the published schedule as captured in this demo. Rates change; confirm before filing.' : 'Placeholder rows are illustrative only and are not valid for a customs filing.') + '</span>' +
-      '</p>' +
+    return '<div class="hs-local" id="destination">' + head + note + headRow + items + pickNote + '</div>';
+  }
+
+  // Direction and market picker. DESTINATIONS only holds markets this demo
+  // actually carries data for, which is the United States alone.
+  function directionHTML(code) {
+    var countries = DESTINATIONS.map(function (id) { return COUNTRIES[id]; });
+    if (!countries.length) return '';
+
+    var options = [];
+    countries.forEach(function (country) {
+      ['import', 'export'].forEach(function (move) {
+        options.push({ move: move, country: country });
+      });
+    });
+
+    var buttons = options.map(function (option) {
+      var on = state.movement === option.move && state.destCountry === option.country.id;
+      var system = option.country.id === 'US' ? 'HTSUS ten-digit' : option.country.system;
+      return '<button class="hs-dw-btn' + (on ? ' is-on' : '') + '" type="button" ' +
+        'data-move="' + option.move + '" data-market="' + option.country.id + '">' +
+        '<b>' + (option.move === 'import' ? 'Import' : 'Export') + ' · ' + esc(option.country.name) + '</b>' +
+        '<span>' + esc(system) + '</span>' +
+        '</button>';
+    }).join('');
+
+    var title = options.length > 2 ? 'Six destinations for this code'
+      : options.length === 2 ? 'Two directions for this code'
+      : 'One direction for this code';
+
+    return '<div class="hs-dw">' +
+      '<p class="hs-dw-title">' + title + '</p>' +
+      '<p class="hs-dw-sub">Pick a direction and market to see the local line and duty. Import and export rates differ.</p>' +
+      '<div class="hs-dw-grid">' + buttons + '</div>' +
       '</div>';
   }
 
@@ -650,12 +723,20 @@
       : (shown[0] ? shown[0].code : null);
     var country = state.localCountry || state.destCountry || 'US';
 
-    return refine +
+    return stepHead(1, 'Six-digit candidates', shown.length + ' shown') +
+      refine +
       '<div class="hs-cands' + (shown.length === 1 ? ' is-one' : '') + '">' + cards + '</div>' +
       '<p class="hs-note">' + ICON.info +
-        '<span>Candidate classifications are starting points. Confirm the material, construction and final use before you settle on a code.</span>' +
+        '<span>Candidate classifications are starting points. Confirm the material, construction and final use before you use a code.</span>' +
       '</p>' +
-      (code ? localTableHTML(code, country) : '');
+      (code
+        ? '<div class="hs-step-block" id="step-local">' +
+            stepHead(2, state.movement === 'import' ? 'Full import code' : 'Code at the destination',
+              COUNTRIES[country].name + ' · ' + COUNTRIES[country].system) +
+            classPickerHTML(shown, code) +
+            localTableHTML(code, country) +
+          '</div>'
+        : '');
   }
 
   function codeHTML(result) {
@@ -686,13 +767,18 @@
             '<button class="btn btn-outline btn-sm" type="button" data-copy="' + esc(entry.code) + '">' + ICON.copy + '<span>Copy code</span></button>' +
             (entry.detail && (entry.detail.build || entry.detail.mixup || entry.detail.note)
               ? '<button class="hs-toggle" type="button" data-toggle="' + esc(entry.code) + '" aria-expanded="' + open + '" aria-controls="' + detailId + '">' +
-                (open ? 'Hide details' : 'Classification details') + ICON.chevron + '</button>'
+                (open ? 'Hide classification details' : 'View classification details') + ICON.chevron + '</button>'
               : '') +
           '</div>' +
           details +
         '</article>' +
       '</div>' +
-      localTableHTML(entry.code, country);
+      directionHTML(entry.code) +
+      '<div class="hs-step-block" id="step-local">' +
+        stepHead(2, state.movement === 'import' ? 'Full import code' : 'Code at the destination',
+          COUNTRIES[country].name + ' · ' + COUNTRIES[country].system) +
+        localTableHTML(entry.code, country) +
+      '</div>';
   }
 
   function localcodeHTML(result) {
@@ -710,7 +796,13 @@
       : '<div class="hs-empty">The demo dataset has no six-digit entry for ' + esc(result.code) +
         ', so only the destination rows are shown.</div>';
 
-    return '<div class="hs-cands is-single">' + explain + '</div>' + localTableHTML(result.code, country);
+    return '<div class="hs-cands is-single">' + explain + '</div>' +
+      directionHTML(result.code) +
+      '<div class="hs-step-block" id="step-local">' +
+        stepHead(2, state.movement === 'import' ? 'Full import code' : 'Code at the destination',
+          COUNTRIES[country].name + ' · ' + COUNTRIES[country].system) +
+        localTableHTML(result.code, country) +
+      '</div>';
   }
 
   function noneHTML(result) {
@@ -722,8 +814,8 @@
       '<p>' + reason + '</p>' +
       '<ul class="hs-empty-tips">' +
         '<li>' + ICON.arrow + '<span>Try a more specific product name.</span></li>' +
-        '<li>' + ICON.arrow + '<span>Add the material or the intended use.</span></li>' +
-        '<li>' + ICON.arrow + '<span>Check the digits, or change the destination in the lookup form.</span></li>' +
+        '<li>' + ICON.arrow + '<span>Add the material or intended use.</span></li>' +
+        '<li>' + ICON.arrow + '<span>Check the digits, or change the destination at the top of the page.</span></li>' +
       '</ul>' +
       '<div class="hs-results-actions" style="justify-content:center">' +
         '<button class="btn btn-outline btn-sm" type="button" data-edit>Edit search</button>' +
@@ -818,12 +910,13 @@
     el.title.textContent = 'Results';
     el.count.hidden = true;
     el.meta.textContent = '';
+    if (el.kicker) el.kicker.textContent = 'Results';
 
     if (result.kind === 'product' || result.kind === 'prefix') {
       var shown = visibleCandidates(result).length;
       var total = result.candidates.length;
       el.title.textContent = result.kind === 'product'
-        ? 'Candidate classifications'
+        ? 'Candidate classifications for “' + result.query + '”'
         : 'Codes starting with ' + result.digits;
       el.count.hidden = false;
       el.count.textContent = shown < total ? shown + ' of ' + total : String(total);
@@ -837,12 +930,13 @@
     }
 
     if (result.kind === 'code') {
-      el.title.textContent = 'Code lookup';
+      el.title.textContent = 'Code lookup result';
       el.meta.textContent = result.code + ' · ' + contextLabel() + ' · ' + result.entry.short;
       return;
     }
 
     if (result.kind === 'localcode') {
+      if (el.kicker) el.kicker.textContent = 'Local code';
       el.title.textContent = 'Local code lookup';
       el.count.hidden = false;
       el.count.textContent = result.digits;
@@ -864,7 +958,8 @@
       return;
     }
 
-    el.title.textContent = 'No matching classifications';
+    if (el.kicker) el.kicker.textContent = 'No results';
+    el.title.textContent = 'No matching classifications found.';
     el.meta.textContent = 'Nothing in the demo dataset matches this search yet.';
   }
 
@@ -1077,9 +1172,9 @@
           '<span class="tag">' + esc(dirPill) + '</span></div>' +
         '<h4>' + esc(entry.short) + '</h4>' +
         (entry.plain ? '<p>' + esc(entry.plain) + '</p>' : '') +
-        '<p class="hs-fine">Direction and destination come from the lookup form — change them there and this answer follows.</p>' +
+        '<p class="hs-fine">Direction and destination come from the top of the page — change them there and this answer follows.</p>' +
         '<div class="cp-local">' + rowCopy + '</div>' +
-        (entry.verify && entry.verify.length ? verifyHTML(entry.verify, 'Check before you choose') : '') +
+        (entry.verify && entry.verify.length ? verifyHTML(entry.verify, 'Check before you ship') : '') +
         '<div class="hs-cand-actions">' +
           '<button class="btn btn-primary btn-sm" type="button" data-open-code="' + esc(entry.code) + '">Open full lookup</button>' +
           '<button class="btn btn-ghost btn-sm" type="button" data-chapter-reset>Start over</button>' +
@@ -1204,6 +1299,9 @@
 
   document.getElementById('edit-search').addEventListener('click', focusSearch);
 
+  var guideLookup = document.getElementById('guide-lookup');
+  if (guideLookup) guideLookup.addEventListener('click', focusSearch);
+
   document.querySelectorAll('[data-example]').forEach(function (button) {
     button.addEventListener('click', function () {
       el.input.value = button.getAttribute('data-example');
@@ -1225,7 +1323,7 @@
     var hint = document.getElementById('dest-hint-text');
     if (hint) {
       if (!state.movement && !state.destCountry) {
-        hint.textContent = 'Leave either field blank to start with the international six-digit code. Pick a destination after the result to see the local line.';
+        hint.textContent = 'Six digits are shared internationally. Pick a destination after the six-digit code to see the local line.';
       } else if (state.destCountry && !state.movement) {
         hint.textContent = 'Destination set to ' + countryName(state.destCountry) +
           '. Choose Import or Export to position the rate, or leave it blank to compare both.';
@@ -1259,8 +1357,16 @@
     var data = button.dataset;
 
     if (data.move !== undefined) {
-      state.movement = state.movement === data.move ? null : data.move;
-      if (state.destCountry) state.localCountry = state.destCountry;
+      // The direction picker carries both values, so it sets them together
+      // instead of relying on a separate destination click.
+      if (data.market !== undefined) {
+        state.movement = data.move;
+        state.destCountry = data.market;
+        state.localCountry = data.market;
+      } else {
+        state.movement = state.movement === data.move ? null : data.move;
+        if (state.destCountry) state.localCountry = state.destCountry;
+      }
       applyContext();
       return;
     }
@@ -1404,6 +1510,13 @@
     if (data.pick !== undefined) {
       el.input.value = data.pick;
       runSearch(data.pick);
+      return;
+    }
+
+    if (data.cand !== undefined) {
+      state.destCode = data.cand;
+      state.localDetail = {};
+      render();
       return;
     }
 

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HS Code Lookup — Find Tariff Codes by Product | 17TRACK</title>
-<meta name="description" content="Find the right HS code in seconds. Describe the product or drill from chapter to six digits, then pick a destination to see the local tariff line.">
+<meta name="description" content="Find HS codes by product description, understand an existing code, or explore destination-specific classifications. Demo dataset.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23003a9b'/%3E%3Ctext x='16' y='22' font-family='Arial,Helvetica,sans-serif' font-size='15' font-weight='700' fill='%23ffffff' text-anchor='middle'%3E17%3C/text%3E%3C/svg%3E">
 <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.css">
@@ -17,7 +17,7 @@
       <span class="notice-i" aria-hidden="true">i</span>
       <span>Demo dataset, not an official tariff source. Confirm every code before you file a customs declaration.</span>
     </span>
-    <a href="#anatomy">How codes are built</a>
+    <a href="#hs-basics">How codes are built</a>
   </div>
 </div>
 
@@ -154,8 +154,8 @@
   <section class="hs-hero" aria-labelledby="page-title">
     <div class="shell hs-hero-inner">
       <div class="hs-hero-copy">
-        <h1 id="page-title">HS Code <span class="title-break">Lookup</span></h1>
-        <p class="hs-lede">Find the right HS code in seconds — describe the product, or drill from chapter to six digits, then pick a destination for the local line.</p>
+        <h1 id="page-title">HS Code Lookup</h1>
+        <p class="hs-lede">Find the right HS code in seconds — describe the product, or drill from chapter to six digits.</p>
         <div class="hs-meta">
           <span>6 digits shared internationally</span>
           <span>Local lines for the United States</span>
@@ -164,16 +164,20 @@
 
         <div class="hs-tool">
           <form id="search-form" novalidate>
+            <div class="hs-ctx-head">
+              <h3 class="hs-ctx-title">Choose a direction and destination</h3>
+              <p class="hs-ctx-sub">Optional — choose import or export and a market, or leave it blank and pick a destination after the six-digit code.</p>
+            </div>
             <div class="hs-opt-row">
               <div class="hs-opt">
-                <span class="hs-label" id="ctx-title">Goods moving <span class="hs-pill-soft">Optional</span></span>
+                <span class="hs-label" id="ctx-title">Goods moving</span>
                 <div class="hs-chips" role="group" aria-labelledby="ctx-title">
                   <button class="hs-chip" type="button" data-move="import" aria-pressed="false">Import</button>
                   <button class="hs-chip" type="button" data-move="export" aria-pressed="false">Export</button>
                 </div>
               </div>
               <div class="hs-opt">
-                <span class="hs-label" id="ctx-dest">Destination <span class="hs-pill-soft">Optional</span></span>
+                <span class="hs-label" id="ctx-dest">Destination</span>
                 <div class="hs-chips" role="group" aria-labelledby="ctx-dest">
                   <button class="hs-chip" type="button" data-market="US" aria-pressed="false">United States</button>
                 </div>
@@ -183,25 +187,32 @@
               <label for="query">Product description or HS code</label>
               <span>Numbers and English only</span>
             </div>
-            <textarea
-              id="query"
-              class="hs-textarea"
-              rows="3"
-              placeholder="e.g. cotton T-shirt, ceramic mug, or 610910"
-              aria-describedby="query-hint query-error"
-              aria-invalid="false"
-            ></textarea>
+            <div class="hs-input-wrap">
+              <textarea
+                id="query"
+                class="hs-textarea"
+                rows="3"
+                placeholder="e.g. cotton T-shirt, ceramic mug, or 610910"
+                aria-describedby="query-hint query-error"
+                aria-invalid="false"
+              ></textarea>
+              <div class="hs-action">
+                <button class="btn btn-primary btn-lg" type="submit" id="submit-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>
+                  <span>Find code</span>
+                </button>
+              </div>
+            </div>
             <div class="hs-tool-meta">
               <p class="hs-hint" id="query-hint">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-                <span>Include the material, use or manufacturing method for a tighter match.</span>
+                <span>For better results, include the material, use, or manufacturing method.</span>
               </p>
               <div class="hs-examples">
-                <span>Examples</span>
+                <span>Try an example:</span>
                 <button type="button" data-example="Cotton T-shirt">Cotton T-shirt</button>
                 <button type="button" data-example="Ceramic mug">Ceramic mug</button>
                 <button type="button" data-example="610910">610910</button>
-                <button type="button" data-example="Textiles">Textiles</button>
               </div>
             </div>
             <p class="hs-error" id="query-error" hidden role="alert">
@@ -210,13 +221,11 @@
             </p>
 
             <div class="hs-tool-bottom">
-              <div class="hs-action">
-                <button class="btn btn-primary btn-lg" type="submit" id="submit-btn">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>
-                  <span>Find code</span>
-                </button>
-              </div>
-              <p class="hs-fine" id="dest-hint-text">Leave direction and destination blank to start with the international six-digit code. Demo data only, not for customs declarations.</p>
+              <p class="hs-hint" id="dest-hint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                <span id="dest-hint-text">Six digits are shared internationally. Pick a destination after the six-digit code to see the local line.</span>
+              </p>
+              <p class="hs-fine">Demo data only. Not for customs declarations.</p>
             </div>
           </form>
         </div>
@@ -246,6 +255,7 @@
     <div class="shell">
       <div class="zip-section-head">
         <div class="hs-results-title">
+          <p class="hs-kicker" id="results-kicker">Results</p>
           <h2 id="results-title">Results</h2>
           <span class="hs-count" id="results-count" hidden></span>
         </div>
@@ -260,23 +270,26 @@
   <section class="hs-section" id="chapters" aria-labelledby="chap-title">
     <div class="zip-section-head">
       <h2 id="chap-title">Browse by chapter</h2>
-      <a href="#anatomy">
+      <a href="#hs-basics">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
         <span>How codes are built</span>
       </a>
     </div>
-    <p class="hs-section-sub">The tariff schedule runs in chapter order, from live animals to special provisions. Open a range and drill it down: chapter, then heading, then subheading. The direction and destination set above decide the answer.</p>
+    <p class="hs-section-sub">The tariff schedule runs in chapter order, from live animals to special provisions. Open a range and drill it down: chapter, then heading, then subheading. The movement and destination set above decide the answer.</p>
     <div class="chapter-grid" id="chapter-grid"></div>
     <p class="hs-note">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
-      <span>Chapter 01 carries the full six-digit dataset. Every other range keeps a small sample so the drill-down still works. Chapter 99 is reserved for country-specific provisions, so it opens a short note instead of a list.</span>
+      <span>Every range except 99 carries at least one six-digit line in this demo, and only chapters with lines are listed inside a range. Chapter 99 is reserved for country-specific provisions, so it opens a short note instead of a list.</span>
     </p>
   </section>
 
-  <!-- ============================================================ Anatomy -->
-  <section class="hs-section" id="anatomy" aria-labelledby="anat-title">
-    <h2>How to read an HS code</h2>
-    <p class="hs-section-sub">Every code is built the same way: six digits shared internationally, then the digits the importing country adds on top.</p>
+  <!-- ============================================================ What is an HS code -->
+  <section class="hs-section" id="hs-basics" aria-labelledby="basics-title">
+    <h2 id="basics-title">What Is an HS Code in Shipping?</h2>
+    <div class="hs-basics-cols">
+      <p class="lead">An HS code is the Harmonized System code, an internationally standardized way of classifying traded goods, developed and maintained by the World Customs Organization. Customs authorities use it to identify what is moving, assess the duties that apply, and check the trade requirements that go with the product.</p>
+      <p>The international code carries six digits. Countries and customs territories can add further digits on top of those six for their own tariff and statistical schedules, which is why the code you file is often longer than the one you search.</p>
+    </div>
 
     <div class="hs-anatomy">
       <p class="sr-only">An HS code has ten digits. Digits 1 and 2 are the chapter, 3 and 4 the heading, 5 and 6 the subheading, and 7 to 10 the country classification.</p>
@@ -296,12 +309,12 @@
           </div>
           <div class="hs-group is-local">
             <div class="hs-group-digits"><span class="hs-digit">0</span><span class="hs-digit">0</span><span class="hs-digit">1</span><span class="hs-digit">0</span></div>
-            <span class="hs-group-cap"><b>US HTS line</b><span>Digits 7–10</span></span>
+            <span class="hs-group-cap"><b>U.S. HTS line</b><span>Digits 7–10</span></span>
           </div>
         </div>
         <div class="hs-anat-legend">
-          <span class="hs-legend-tag is-hs">Six digits shared internationally</span>
-          <span class="hs-legend-tag">Added by the importing country</span>
+          <span class="hs-legend-tag is-hs">HS code · 6 digits</span>
+          <span class="hs-legend-tag">Country classification</span>
         </div>
       </div>
 
@@ -324,80 +337,132 @@
         <div class="hs-anatomy-note">
           <span>Digits 7–10</span>
           <h3>Country classification</h3>
-          <p>The importing country's own extension. The US HTS adds four digits, which is why local rows run to ten. Other markets extend the same six digits in their own way.</p>
+          <p>The importing country's own extension. The U.S. HTS adds four digits, which is why local lines run to ten. Change the destination in the context bar to see another market's rows for the same six digits.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============================================================ Background -->
-  <section class="hs-band" aria-labelledby="know-title">
+  <!-- ============================================================ How to determine -->
+  <section class="hs-band" id="how-to" aria-labelledby="how-title">
     <div class="hs-section">
-      <h2 id="know-title">Background</h2>
-      <div class="hs-cards">
-        <div class="hs-card">
-          <span class="hs-card-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
-          </span>
-          <h3>Who publishes the digits?</h3>
-          <p>The six-digit level is maintained as an international schedule, so the same code means the same thing across borders. Each country then publishes its own tariff schedule for the digits that follow, and updates it on its own timetable.</p>
+      <div class="hs-guide-split">
+        <div class="hs-guide-side">
+          <h2 id="how-title">How to Determine the HS Code for Your Product</h2>
+          <p class="hs-section-sub">Start with a detailed product description, then verify the classification against the customs tariff that will apply.</p>
+          <button class="btn btn-primary btn-sm" type="button" id="guide-lookup">Start with a product search</button>
+          <p class="hs-guide-note">Have the code already? Enter two, four or six digits instead.</p>
         </div>
-        <div class="hs-card">
-          <span class="hs-card-ico" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/></svg>
-          </span>
-          <h3>Why do I see multiple results?</h3>
-          <p>Material, construction and intended use can each move a product into a different subheading, so more than one result is normal. The narrowing question removes the options that do not fit your item. Check the product details before you settle on one.</p>
+        <div class="hs-guide-body">
+          <ol class="hs-steps">
+            <li class="hs-step">
+              <span class="hs-step-n" aria-hidden="true">1</span>
+              <div>
+                <h3>Identify the product's key characteristics</h3>
+                <p>Write down the material, the main function, the composition and any technical specification that changes what the item is. Say whether you are shipping a finished product, a component, or a set.</p>
+              </div>
+            </li>
+            <li class="hs-step">
+              <span class="hs-step-n" aria-hidden="true">2</span>
+              <div>
+                <h3>Search using a specific description</h3>
+                <p>Use the lookup at the top of this page to begin. “Men's knitted cotton T-shirt” gives the classifier more to work with than “shirt”, and it usually returns a shorter candidate list.</p>
+              </div>
+            </li>
+            <li class="hs-step">
+              <span class="hs-step-n" aria-hidden="true">3</span>
+              <div>
+                <h3>Review the classification details</h3>
+                <p>Compare the headings and subheadings that came back, including the legal notes that govern them. A word in the description matching a tariff line does not by itself confirm the classification.</p>
+              </div>
+            </li>
+            <li class="hs-step">
+              <span class="hs-step-n" aria-hidden="true">4</span>
+              <div>
+                <h3>Check the destination's requirements</h3>
+                <p>Confirm whether the destination needs digits beyond the six-digit HS code. If the classification still is not clear, consult a customs broker or seek a customs ruling where the market offers one.</p>
+              </div>
+            </li>
+          </ol>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ Country differences -->
+  <section class="hs-section" id="country-codes" aria-labelledby="country-title">
+    <h2 id="country-title">Are HS Codes Different for Each Country?</h2>
+    <div class="hs-guide-split">
+      <div class="hs-guide-side">
+        <p>At the six-digit level the HS is internationally standardized, so the same product shares the same six-digit classification across markets. Countries and customs territories can add digits for more detail, so the full declaration code can differ even when the first six digits match.</p>
+        <p class="hs-hts-ref">Shipping into the United States? Imports are filed on the ten-digit HTSUS line. <a href="https://hts.usitc.gov/" target="_blank" rel="noreferrer">Open the HTS lookup</a> to see the line and duty rate.</p>
+      </div>
+      <div class="hs-guide-body">
+        <div class="hs-sys-table-wrap">
+          <table class="hs-sys-table">
+            <colgroup><col style="width:38%"><col style="width:16%"><col style="width:46%"></colgroup>
+            <thead>
+              <tr><th scope="col">Classification system</th><th scope="col">Code length</th><th scope="col">Main use</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>International HS</td><td>6 digits</td><td>International product classification</td></tr>
+              <tr><td>U.S. HTSUS reporting number</td><td>10 digits</td><td>U.S. import classification and reporting</td></tr>
+              <tr><td>U.S. Schedule B</td><td>10 digits</td><td>U.S. export statistical reporting</td></tr>
+              <tr><td>Hong Kong HS classification</td><td>8 digits</td><td>Hong Kong trade classification</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hs-table-note">Always verify the full code the destination requires instead of copying a supplier's code unchanged.</p>
       </div>
     </div>
   </section>
 
   <!-- ============================================================ FAQ -->
   <section class="hs-faq" id="faqs" aria-labelledby="faq-title">
-    <h2 id="faq-title">Questions about HS codes</h2>
+    <h2 id="faq-title">HS Code Lookup FAQs</h2>
+    <p class="hs-section-sub">The questions that come up most often when a code has to travel with a shipment.</p>
     <div class="faq">
       <details>
         <summary>
-          <span>Can I search using a product name?</span>
+          <span>How many digits are HS codes?</span>
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
         </summary>
-        <p class="ans">Yes. Enter a description such as “cotton T-shirt” or “ceramic mug”. The results are candidate classifications, not a single confirmed code, so review the details before choosing.</p>
+        <p class="ans">An international HS code has six digits: the first two identify the chapter, the first four the heading, and all six the subheading. Countries may add digits, so the complete code required for a customs declaration can be longer.</p>
       </details>
       <details>
         <summary>
-          <span>Can I look up a code I already have?</span>
+          <span>Do I need an HS code to ship internationally?</span>
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
         </summary>
-        <p class="ans">Yes. Enter a six-digit HS code such as 610910 to see its description and where it sits in the classification structure. Leading zeros are kept, so codes like 090121 work too.</p>
+        <p class="ans">For most international shipments of goods, an HS-based classification is needed for customs processing. You may need to provide it when preparing a commercial invoice or submitting declaration data. The exact requirement varies by destination, shipment type and carrier.</p>
       </details>
       <details>
         <summary>
-          <span>How do I find a destination-specific code?</span>
+          <span>Is an HS code required on a packing list?</span>
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
         </summary>
-        <p class="ans">Choose the destination in the lookup form. Every result shows the six-digit code and the local lines that country applies, in one answer. Changing the country updates both the search results and the chapter answer.</p>
+        <p class="ans">Not universally. Whether the code has to appear on a packing list depends on the destination's documentation rules and on the requirements of the carrier, broker or buyer. Confirm for your own shipment instead of relying on a generic template.</p>
       </details>
       <details>
         <summary>
-          <span>Why are there multiple possible classifications?</span>
+          <span>Is an HS code the same as an HTS code?</span>
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
         </summary>
-        <p class="ans">Heading and subheading text is written around material, construction, intended use and sometimes the wearer. A cotton T-shirt that is knitted is classified differently from a woven cotton shirt, so the narrowing question asks for exactly that detail.</p>
+        <p class="ans">Not exactly. The HS is the international six-digit system. In the United States, the HTSUS builds on it for import classification and adds digits, so a six-digit HS code may not be enough for a U.S. import declaration.</p>
       </details>
       <details>
         <summary>
-          <span>What should I do if there are no results?</span>
+          <span>Does an HS code tell me the import duty rate?</span>
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
         </summary>
-        <p class="ans">Try a more specific product name, add the material or intended use, or check the digits. You can also open a chapter below and pick the line from there.</p>
+        <p class="ans">It identifies the tariff classification, but it does not set the final duty on its own. The rate that applies also depends on the destination, the goods' origin, and any preferential treatment or additional trade measure in force.</p>
       </details>
       <details>
         <summary>
-          <span>Can I use the results directly for customs declarations?</span>
+          <span>Does automating HS code classification reduce customs delays?</span>
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
         </summary>
-        <p class="ans">No. This demo runs on a small mock dataset and is not connected to any official tariff database. Use it to understand the structure, then confirm the code with the official tariff schedule or a customs broker before you file.</p>
+        <p class="ans">Automation can cut classification errors and make the data more consistent, which may remove some avoidable delays. Suggested codes still need checking: thin product descriptions, missing documents and ordinary customs inspection can hold a shipment regardless of how the code was selected.</p>
       </details>
     </div>
   </section>
@@ -411,7 +476,7 @@
         <p class="fine">Parcel tracking uses tracking numbers only — HS codes do not identify shipments.</p>
         <a class="btn btn-primary btn-lg" href="https://www.17track.net/en">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
-          Track a package
+          Go to package tracking
         </a>
       </div>
       <div class="hs-panel-art" aria-hidden="true">
