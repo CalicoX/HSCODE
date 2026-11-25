@@ -34,7 +34,7 @@
 .hs-hero-inner{
   position:relative;z-index:2;box-sizing:border-box;
   width:min(100%,1440px);margin:0 auto;
-  padding-top:56px;padding-bottom:56px;
+  padding-top:60px;padding-bottom:56px;
   display:grid;grid-template-columns:minmax(0,1fr) 300px;
   align-items:start;gap:clamp(28px,4vw,56px);
 }
@@ -102,8 +102,22 @@
 }
 /* Standing head above the direction and destination chips. */
 .hs-ctx-head{margin-bottom:14px}
+.hs-ctx-head-row{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
 .hs-ctx-title{margin:0;font-size:15px;font-weight:600;line-height:1.4;color:var(--ink)}
+.hs-ctx-link{
+  font-size:12.5px;line-height:1.4;color:var(--brand);font-weight:500;
+  text-decoration:underline;text-underline-offset:2px;white-space:nowrap;
+}
+.hs-ctx-link:hover{color:var(--brand-ink,var(--brand))}
 .hs-ctx-sub{margin:3px 0 0;font-size:12.5px;line-height:1.5;color:var(--body)}
+/* The HTS page fixes the direction to import, so the Export option is stated
+   as text instead of a button the page cannot honour. It matches the chip's
+   box exactly, because a taller or shorter sibling would push the two chip
+   rows to different heights and break the alignment across the pair. */
+.hs-chip-quiet{
+  display:inline-flex;align-items:center;padding:0 13px;min-height:32px;
+  font-size:12.5px;line-height:1;color:var(--muted);
+}
 .hs-opt-row{display:flex;flex-wrap:wrap;gap:14px 32px;align-items:flex-start;margin-bottom:16px}
 .hs-opt{min-width:0}
 /* The submit button sits inside the field's bottom-right corner, so the
@@ -494,6 +508,34 @@
 @media (min-width:560px){
   .hs-dw-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+/* Chosen combination opens its destination lines in place. */
+.hs-dw-panel{margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+.hs-dw-head{
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:4px 12px;
+  padding:11px 16px;border-bottom:1px solid var(--line);background:var(--canvas);
+}
+.hs-dw-head b{font-size:13px;font-weight:600;color:var(--ink)}
+.hs-dw-head span{font-size:12px;color:var(--muted)}
+.hs-dw-row{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:4px;
+  padding:12px 16px;border-bottom:1px solid var(--line-soft);
+}
+.hs-dw-row code{
+  font-family:var(--font);font-size:13.5px;font-weight:600;
+  color:var(--ink);font-variant-numeric:tabular-nums;
+}
+.hs-dw-desc{margin:0;font-size:13px;line-height:1.5;color:var(--body)}
+.hs-dw-rate{font-size:12.5px;line-height:1.5;color:var(--muted)}
+.hs-dw-rate b{font-weight:600;color:var(--ink)}
+.hs-dw-empty{
+  padding:10px 16px;font-size:12.5px;line-height:1.5;color:var(--muted);
+  background:var(--canvas);
+}
+@media (min-width:700px){
+  .hs-dw-row{grid-template-columns:auto minmax(0,1fr) auto;align-items:baseline;gap:16px}
+  .hs-dw-row code{min-width:118px}
+  .hs-dw-rate{text-align:right;max-width:260px}
+}
 
 /* Demo provenance row on the candidate card */
 .hs-lookup-meta{
@@ -716,76 +758,101 @@
 }
 .cp-empty{margin:16px 0 0;font-size:13.5px;line-height:1.7;color:var(--muted)}
 
-/* Anatomy */
+/* Anatomy: one row of ten digits, braces underneath naming each part, then a
+   wider pair of braces for the international block and the country block.
+   Mirrors the reference layout: a centred, width-capped diagram rather than a
+   full-width grid. */
 .hs-anatomy{
-  margin-top:26px;padding:34px 32px;
-  border:1px solid var(--line);border-radius:20px;background:#fafbfc;
+  margin-top:26px;padding:30px 32px 32px;
+  border:1px solid var(--line);border-radius:20px;background:#f7f9fb;
 }
-.hs-strip{
-  padding:26px 28px 22px;
-  border:1px solid var(--line);border-radius:var(--radius);background:#fff;
+/* The diagram sits directly on the panel: a white box inside the grey panel
+   would double the borders and push the braces off the digits. */
+.hs-strip{padding:6px 0 0}
+.hs-digit-row,
+.hs-brace-row{
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr)) 28px repeat(4,minmax(0,1fr));
+  gap:6px;
+  max-width:660px;margin-left:auto;margin-right:auto;
 }
-.hs-anat-row{display:grid;gap:0}
-.hs-group{
-  display:flex;flex-direction:column;gap:10px;min-width:0;
-  padding:0 24px;border-left:1px solid var(--line);
-}
-.hs-anat-row .hs-group:first-child{padding-left:0;border-left:0}
-.hs-group.is-hs .hs-digit{border-color:#e4e6eb;background:#f2f3f5;color:#212121}
-.hs-group.is-local .hs-digit{background:#fff;border-color:#cfd4dc;color:#475467;border-style:dashed}
-.hs-group-digits{display:flex;gap:6px}
 .hs-digit{
-  display:grid;place-items:center;width:42px;height:46px;
-  border:1px solid var(--line);border-radius:8px;background:#fff;
+  display:grid;place-items:center;height:46px;
+  border:1px solid var(--line);border-radius:7px;background:#fff;
   color:var(--ink);font-size:15px;font-weight:600;
   font-variant-numeric:tabular-nums;
+  transition:border-color .15s ease,background .15s ease;
 }
-.hs-group-cap{
-  display:flex;flex-direction:column;gap:1px;
-  font-size:11.5px;line-height:1.5;color:var(--muted);
+/* The six international digits read as one group; the four national digits
+   are lighter and dashed so the split is visible without a legend. */
+.hs-digit.is-hs{background:#f2f3f5;border-color:#e4e6eb;color:#212121}
+.hs-digit.is-local{background:#fff;border-color:#cfd4dc;color:#475467;border-style:dashed}
+.hs-digit-gap{height:46px}
+.hs-brace-row{margin-top:2px;align-items:start}
+/* The part braces and the group braces stack, so give the second row a little
+   more air and keep both brace lines level. */
+.hs-brace-row:not(.hs-brace-row-parts){margin-top:6px}
+.hs-brace-row-parts .hs-brace{height:24px}
+.hs-brace{
+  position:relative;height:26px;margin-top:8px;
+  border-top:1px solid #c6d2dd;
 }
-.hs-group-cap b{font-size:12.5px;font-weight:600;color:var(--ink-2)}
-.hs-anat-legend{
-  display:flex;flex-wrap:wrap;gap:8px 20px;
-  margin-top:22px;padding-top:16px;border-top:1px solid var(--line-soft);
+.hs-brace::before,
+.hs-brace::after{
+  content:"";position:absolute;top:0;width:1px;height:6px;background:#c6d2dd;
 }
-.hs-legend-tag{
+.hs-brace::before{left:0}
+.hs-brace::after{right:0}
+.hs-brace i{
+  position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  font-style:normal;font-size:10.5px;line-height:1.3;
+  color:var(--muted);white-space:nowrap;
+}
+/* The group row opens upward: the line sits under the digits and its ends
+   turn up toward them, so it reads as one bracket around the ten digits
+   rather than a second row of part braces. */
+.hs-brace.is-up{
+  margin-top:2px;padding-top:0;
+  border-top:0;border-bottom:1px solid #c6d2dd;
+}
+.hs-brace.is-up::before,
+.hs-brace.is-up::after{top:auto;bottom:0;height:7px}
+.hs-brace.is-up i{top:9px}
+.hs-brace.is-hs{border-top-color:var(--brand-line);border-bottom-color:var(--brand-line)}
+.hs-brace.is-hs::before,
+.hs-brace.is-hs::after{background:var(--brand-line)}
+.hs-brace.is-hs i{color:var(--brand);font-weight:600}
+.hs-legend{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:8px 22px;margin-top:20px;padding-top:16px;
+  border-top:1px solid var(--line-soft);
+}
+/* Each entry stays on one line as a unit, so a dot never separates from its
+   label when the row wraps. */
+.hs-legend-item{
   display:inline-flex;align-items:center;gap:7px;
-  font-size:12px;color:var(--muted);
+  font-size:12px;color:var(--muted);white-space:nowrap;
 }
-.hs-legend-tag::before{
-  content:"";width:11px;height:11px;border-radius:3px;
-  background:#fff;border:1px dashed #c8cdd6;
+.hs-legend-dot{
+  width:11px;height:11px;border-radius:3px;flex:0 0 auto;
 }
-.hs-legend-tag.is-hs::before{background:#eceef1;border:1px solid #d9dce2}
-@media (min-width:900px){
-  .hs-anat-row{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .hs-anat-row .hs-group{padding:0 26px}
-}
-@media (max-width:899px){
-  .hs-anat-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 0}
-  .hs-anat-row .hs-group:nth-child(odd){padding-left:0;border-left:0}
-  .hs-anat-row .hs-group:nth-child(n+3){padding-top:22px;border-top:1px solid var(--line-soft)}
-}
-@media (max-width:559px){
-  /* One group per row, digits beside the caption instead of stacked above it.
-     Stacking left the right half of every row empty and stretched ten digits
-     down the screen. */
-  .hs-anat-row{grid-template-columns:minmax(0,1fr);gap:0}
-  .hs-anat-row .hs-group{
-    flex-direction:row;flex-wrap:wrap;align-items:center;gap:14px;row-gap:9px;
-    padding:14px 0;border-left:0;border-top:1px solid var(--line-soft);
+.hs-legend-dot.is-hs{background:#f2f3f5;border:1px solid #e4e6eb}
+.hs-legend-dot.is-local{background:#fff;border:1px dashed #cfd4dc}
+@media (max-width:759px){
+  /* Ten digits and two brace rows do not fit a phone. Let the digits wrap
+     naturally, drop the braces, and name the two blocks with small labels
+     instead: a brace spanning a wrapped row points at the wrong digits. */
+  .hs-digit-row,
+  .hs-brace-row{max-width:none}
+  .hs-digit-row{grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
+  .hs-digit-gap{display:none}
+  .hs-digit{height:38px;font-size:13.5px}
+  .hs-brace-row{display:none}
+  .hs-strip{padding:18px 14px 16px}
+  .hs-legend{
+    justify-content:flex-start;gap:5px 14px;
+    margin-top:14px;padding-top:12px;
   }
-  .hs-anat-row .hs-group:first-child{padding-top:0;border-top:0}
-  .hs-anat-row .hs-group:nth-child(n+3){padding-top:14px}
-  .hs-anat-row .hs-group:last-child{padding-bottom:0}
-  .hs-anat-row .hs-group-digits{flex:0 0 auto;gap:5px}
-  /* The caption needs about 84px to keep "US HTS line" on one line. Below that
-     it drops to its own full-width row instead of breaking mid-phrase. */
-  .hs-anat-row .hs-group-cap{flex:1 1 84px;min-width:0;justify-content:center}
-  .hs-digit{width:clamp(29px,7.8vw,36px);height:clamp(35px,9.2vw,42px);font-size:13.5px}
-  .hs-strip{padding:20px 18px 18px}
-  .hs-anat-legend{margin-top:16px;padding-top:14px;gap:6px 16px}
 }
 .hs-anatomy-notes{
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
@@ -845,6 +912,9 @@
   width:100%;border-collapse:collapse;table-layout:fixed;
   min-width:480px;border-top:1px solid var(--line);
 }
+/* The table sits opposite the section heading, so lift it so the header row's
+   cap height lines up with the heading's cap height. */
+.hs-guide-body > .hs-sys-table-wrap:first-child{margin-top:-4px}
 .hs-sys-table th{
   padding:10px 14px;text-align:left;
   border-bottom:1px solid var(--line);
@@ -865,7 +935,8 @@
 .hs-hts-ref a:hover{border-bottom-color:var(--brand)}
 
 /* Under 640px the system table stacks: one block per system, with the
-   column label carried by a pseudo-element instead of a header row. */
+   column label carried by a pseudo-element instead of a header row. The label
+   text is per-table, so a four-column comparison can name its own columns. */
 @media (max-width:639px){
   .hs-sys-table-wrap{overflow:visible}
   .hs-sys-table{min-width:0;border-top:0}
@@ -876,6 +947,21 @@
   .hs-sys-table td:first-child{font-size:14.5px;font-weight:600;margin-bottom:3px}
   .hs-sys-table td:nth-child(2)::before{content:"Code length: ";color:var(--muted)}
   .hs-sys-table td:nth-child(3)::before{content:"Main use: ";color:var(--muted)}
+  /* The HS-vs-HTS-vs-Schedule-B table has four columns with no room for
+     "Code length"/"Main use" labels, so it sets its own and hides the header
+     cell, whose value is repeated as the block title. */
+  .hs-sys-table.is-compare colgroup{display:none}
+  .hs-sys-table.is-compare tr{position:relative;padding-left:0}
+  .hs-sys-table.is-compare td:first-child{
+    font-size:11.5px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;
+    color:var(--muted);margin-bottom:6px;
+  }
+  .hs-sys-table.is-compare td:nth-child(2)::before{content:"HS code — ";color:var(--ink);font-weight:500}
+  .hs-sys-table.is-compare td:nth-child(3)::before{content:"U.S. HTS — ";color:var(--ink);font-weight:500}
+  .hs-sys-table.is-compare td:nth-child(4)::before{content:"Schedule B — ";color:var(--ink);font-weight:500}
+  .hs-sys-table.is-compare td:nth-child(n+2){margin-top:5px;color:var(--body)}
+  /* The mistakes table keeps its own two labels. */
+  .hs-sys-table.is-mistakes td:nth-child(2)::before{content:"How to avoid it: ";color:var(--muted)}
 }
 
 /* Country comparison and chapters both sit between grey bands, so they carry

@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTS Code Lookup — Find U.S. Tariff Codes by Product | 17TRACK</title>
+<meta name="description" content="Find U.S. HTS codes by product description or HS code, then confirm the ten-digit HTSUS line and General duty rate. Demo dataset.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23003a9b'/%3E%3Ctext x='16' y='22' font-family='Arial,Helvetica,sans-serif' font-size='15' font-weight='700' fill='%23ffffff' text-anchor='middle'%3E17%3C/text%3E%3C/svg%3E">
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/hs.css">
+</head>
+<body id="top" data-page="hts">
+<div class="notice">
+  <div class="shell notice-inner">
+    <span class="notice-msg">
+      <span class="notice-i" aria-hidden="true">i</span>
+      <span>Demo dataset, not an official tariff source. Confirm every code before you file a customs declaration.</span>
+    </span>
+    <a href="index.html">Looking for the HS lookup?</a>
+  </div>
+</div>
+
+<header class="site-head">
+  <div class="shell head-inner">
+    <a class="brand" href="https://www.17track.net/en" aria-label="17TRACK home">
+      <img src="assets/logo-full.svg" alt="17TRACK" width="130" height="21">
+    </a>
+    <nav class="nav" aria-label="Main navigation">
+      <a class="nav-link" href="https://www.17track.net/en/order-tracking">Order Tracking</a>
+      <a class="nav-link" href="https://www.17track.net/en/returns">17RETURNS</a>
+      <a class="nav-link" href="https://www.17track.net/en/api">API</a>
+      <span class="nav-divider" aria-hidden="true"></span>
+      <a class="nav-link" href="https://www.17track.net/en/carriers">Carriers</a>
+      <details class="nav-drop">
+        <summary>Resources</summary>
+        <div class="nav-mega" id="resources-mega">
+          <div class="nav-mega-inner">
+            <div class="nav-mega-list">
+              <a class="nav-mega-item" href="https://www.17track.net/en/widget" data-preview="widget">
+                <span><strong>Tracking Widget</strong><small>Track package in your website</small></span>
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+              <a class="nav-mega-item" href="https://api.17track.net/en/doc" target="_blank" rel="noreferrer" data-preview="api">
+                <span><strong>API Document</strong><small>Comprehensive guides for seamless integration</small></span>
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+              <a class="nav-mega-item" href="https://help.17track.net/hc/en-us" target="_blank" rel="noreferrer" data-preview="help">
+                <span><strong>Help center</strong><small>Guide to using our products</small></span>
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+              <a class="nav-mega-item" href="https://www.17track.net/en/app" data-preview="app">
+                <span><strong>17TRACK Mobile App</strong><small>Track packages in your pocket anytime anywhere</small></span>
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+              <a class="nav-mega-item" href="index.html" data-preview="hs">
+                <span><strong>HS Code Lookup</strong><small>Find six-digit tariff codes by product</small></span>
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+              <a class="nav-mega-item is-active" href="hts.html" data-preview="hts" aria-current="page">
+                <span><strong>HTS Code Lookup</strong><small>Find the U.S. ten-digit import line</small></span>
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+              <a class="nav-mega-item" href="https://www.17track.net/en/zipcode" data-preview="zip">
+                <span><strong>ZIP Code</strong><small>Look up US ZIP Codes by city and county</small></span>
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            </div>
+            <div class="nav-mega-preview is-hidden" data-preview-panel="widget">
+              <div class="nav-mega-shot"><img src="https://static.17track.net/www/2026-11/assets/images/nav/tracking_widget_0903.png" alt="" width="1600" height="600" decoding="async"></div>
+              <p>Effortlessly add our powerful, free widget to your website. Allow users to enter tracking numbers to track packages directly on your page.</p>
+              <a class="nav-mega-more" href="https://www.17track.net/en/widget">View more<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
+            <div class="nav-mega-preview is-hidden" data-preview-panel="api">
+              <div class="nav-mega-shot"><img src="https://static.17track.net/www/2026-11/assets/images/nav/api_doc_0903.png" alt="" width="1600" height="600" decoding="async"></div>
+              <p>Access detailed documentation for integrating our API. Find step-by-step guides to simplify the process. Benefit from clear instructions and dedicated tech support.</p>
+              <a class="nav-mega-more" href="https://api.17track.net/en/doc" target="_blank" rel="noreferrer">View more<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
+            <div class="nav-mega-preview is-hidden" data-preview-panel="help">
+              <div class="nav-mega-shot"><img src="https://static.17track.net/www/2026-11/assets/images/nav/help_center_0903.png" alt="" width="1600" height="600" decoding="async"></div>
+              <p>Our Help Center helps you quickly find solutions to common questions. Explore our comprehensive FAQs and helpful guides. Efficiently get the answers you need.</p>
+              <a class="nav-mega-more" href="https://help.17track.net/hc/en-us" target="_blank" rel="noreferrer">View more<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
+            <div class="nav-mega-preview is-hidden" data-preview-panel="app">
+              <div class="nav-mega-shot"><img src="https://static.17track.net/www/2026-11/assets/images/nav/app_0903.png" alt="" width="1600" height="600" decoding="async"></div>
+              <p>Stay updated with real-time tracking for over 2800+ carriers in 33 languages. Receive timely notifications and enjoy a seamless user experience with 120 tracking accuracy.</p>
+              <a class="nav-mega-more" href="https://www.17track.net/en/app">View more<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
+            <div class="nav-mega-preview" data-preview-panel="hs">
+              <div class="nav-mega-shot nav-mega-hs" aria-hidden="true">
+                <div class="nshot-code"><span class="nshot-seg">6109</span><span class="nshot-seg nshot-seg-rest">10</span><span class="nshot-seg nshot-seg-local">0010</span></div>
+                <p class="nshot-label">T-shirts, singlets and other vests — cotton, knitted</p>
+                <div class="nshot-rows"><span>US HTS</span></div>
+              </div>
+              <p>Describe the product or drill from chapter to six digits, then pick a destination to see the local tariff line and duty rate.</p>
+              <a class="nav-mega-more" href="index.html">View more<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
+            <div class="nav-mega-preview is-hidden" data-preview-panel="hts">
+              <div class="nav-mega-shot nav-mega-hs" aria-hidden="true">
+                <div class="nshot-code"><span class="nshot-seg">0101</span><span class="nshot-seg nshot-seg-rest">21</span><span class="nshot-seg nshot-seg-local">0010</span></div>
+                <p class="nshot-label">Pure-bred breeding horses — U.S. HTS ten-digit line</p>
+                <div class="nshot-rows"><span>HTSUS</span></div>
+              </div>
+              <p>Search a product or HS code, then confirm the ten-digit U.S. HTS line with its General and Column 2 duty rate.</p>
+              <a class="nav-mega-more" href="hts.html">View more<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
+            <div class="nav-mega-preview is-hidden" data-preview-panel="zip">
+              <div class="nav-mega-shot"><img src="assets/nav/zip-code-nav.jpg" alt="" width="1600" height="600" decoding="async"></div>
+              <p>Look up a US ZIP Code and see the city, county and region it belongs to. Browse the state index and download the list as a CSV file.</p>
+              <a class="nav-mega-more" href="https://www.17track.net/en/zipcode">View more<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
+          </div>
+        </div>
+      </details>
+    </nav>
+    <div class="head-actions">
+      <a class="bfcm" href="https://www.17track.net/en">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>
+        BFCM 2026 <span class="dot" aria-hidden="true"></span>
+      </a>
+      <a class="icon-btn lang" href="https://www.17track.net/en">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        English <span class="caret" aria-hidden="true"></span>
+      </a>
+      <a class="icon-btn login" href="https://www.17track.net/en">Log in <span class="caret" aria-hidden="true"></span></a>
+      <a class="pill-split" href="https://www.17track.net/en">
+        <span class="lbl">Sign up</span>
+        <span class="arrow" aria-hidden="true"><span class="caret"></span></span>
+      </a>
+      <a class="pill-split shopify" href="https://apps.shopify.com/17track">
+        <span class="lbl">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Shopify App
+        </span>
+        <span class="arrow" aria-hidden="true"><span class="caret"></span></span>
+      </a>
+      <details class="menu">
+        <summary aria-label="Open menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"/></svg>
+        </summary>
+        <div class="menu-panel">
+          <div class="menu-panel-inner">
+            <a href="https://www.17track.net/en/order-tracking">Order Tracking</a>
+            <a href="https://www.17track.net/en/returns">17RETURNS</a>
+            <a href="https://www.17track.net/en/api">API</a>
+            <a href="https://www.17track.net/en/carriers">Carriers</a>
+            <a href="https://www.17track.net/en/widget">Tracking Widget</a>
+            <a href="https://api.17track.net/en/doc" target="_blank" rel="noreferrer">API Document</a>
+            <a href="https://help.17track.net/hc/en-us" target="_blank" rel="noreferrer">Help center</a>
+            <a href="https://www.17track.net/en/app">17TRACK Mobile App</a>
+            <a href="index.html">HS Code Lookup</a>
+            <a href="hts.html">HTS Code Lookup</a>
+            <a href="https://www.17track.net/en/zipcode">ZIP Code</a>
+            <span class="sep" aria-hidden="true"></span>
+            <a href="https://www.17track.net/en">Language: English</a>
+            <a href="https://www.17track.net/en">Log in</a>
+            <a class="menu-cta" href="https://www.17track.net/en">Sign up</a>
+            <a class="menu-cta" href="https://apps.shopify.com/17track" style="background:#377e62">Shopify App</a>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <!-- ============================================================ Hero + lookup -->
+  <section class="hs-hero" aria-labelledby="page-title">
+    <div class="shell hs-hero-inner">
+      <div class="hs-hero-copy">
+        <h1 id="page-title">HTS Code Lookup</h1>
+        <p class="hs-lede">Find the U.S. HTS code in seconds — search a product or HS code, then confirm the ten-digit line and duty.</p>
+        <div class="hs-meta">
+          <span>Ten-digit HTSUS lines</span>
+          <span>General duty and Column 2</span>
+          <span>Chapter to subheading drill-down</span>
+        </div>
+
+        <div class="hs-tool">
+          <form id="search-form" novalidate>
+            <div class="hs-ctx-head">
+              <div class="hs-ctx-head-row">
+                <h3 class="hs-ctx-title">U.S. import context</h3>
+                <a class="hs-ctx-link" href="index.html">Looking for HS Code?</a>
+              </div>
+              <p class="hs-ctx-sub">This page follows the HTSUS schedule. Search by product or code, then confirm the ten-digit line and duty. For other markets, open the HS lookup.</p>
+            </div>
+            <div class="hs-opt-row">
+              <div class="hs-opt">
+                <span class="hs-label" id="ctx-dest">Destination</span>
+                <div class="hs-chips" role="group" aria-labelledby="ctx-dest">
+                  <button class="hs-chip" type="button" data-market="US" aria-pressed="true">United States</button>
+                </div>
+              </div>
+              <div class="hs-opt">
+                <span class="hs-label" id="ctx-title">Goods moving</span>
+                <div class="hs-chips" role="group" aria-labelledby="ctx-title">
+                  <button class="hs-chip" type="button" data-move="import" aria-pressed="true">Import</button>
+                  <span class="hs-chip-quiet">Export — use the HS lookup</span>
+                </div>
+              </div>
+            </div>
+            <div class="hs-field-head">
+              <label for="query">Product description or HS code</label>
+              <span>Numbers and English only</span>
+            </div>
+            <div class="hs-input-wrap">
+              <textarea
+                id="query"
+                class="hs-textarea"
+                rows="3"
+                placeholder="e.g. live horses, 010121, or 0101"
+                aria-describedby="query-hint query-error"
+                aria-invalid="false"
+              ></textarea>
+              <div class="hs-action">
+                <button class="btn btn-primary btn-lg" type="submit" id="submit-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4.3-4.3"/></svg>
+                  <span>Find code</span>
+                </button>
+              </div>
+            </div>
+            <div class="hs-tool-meta">
+              <p class="hs-hint" id="query-hint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                <span>For better results, include the material, use, or manufacturing method.</span>
+              </p>
+              <div class="hs-examples">
+                <span>Try an example:</span>
+                <button type="button" data-example="live horses">live horses</button>
+                <button type="button" data-example="010121">010121</button>
+                <button type="button" data-example="0101">0101</button>
+              </div>
+            </div>
+            <p class="hs-error" id="query-error" hidden role="alert">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              <span id="query-error-text"></span>
+            </p>
+
+            <div class="hs-tool-bottom">
+              <p class="hs-hint" id="dest-hint">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                <span id="dest-hint-text">The first six digits are the global HS code. The U.S. HTS line adds four more digits and the duty rate.</span>
+              </p>
+              <p class="hs-fine">Demo data only. Not for customs declarations.</p>
+            </div>
+          </form>
+        </div>
+
+        <div class="hs-ad">
+          <aside class="banner-ad" aria-label="Advertisement: 17TRACK homepage promotion">
+            <a href="https://www.17track.net/zh-cn/activity/bfcm-api" target="_blank" rel="noreferrer sponsored"><img src="assets/ads/homepage-banner.svg" width="728" height="90" alt="17TRACK Black Friday API promotion"></a>
+          </aside>
+        </div>
+      </div>
+
+      <aside class="hero-ad" aria-label="Advertisement: sample 17TRACK tracking promotion">
+        <span class="ad-label">Advertisement · Preview</span>
+        <img class="ad-brand" src="assets/footer/logo-footer.svg" width="130" height="22" alt="17TRACK">
+        <h2>Every parcel.<br>One clear view.</h2>
+        <p>Follow your deliveries around the world, all in one place.</p>
+        <div class="ad-orbit" aria-hidden="true"><svg viewBox="0 0 120 120" fill="none"><path d="m15 40 44-24 46 23-45 25-45-24Z" fill="#91b6ff"/><path d="m15 40 45 24v48L15 87V40Z" fill="#3974d6"/><path d="m60 64 45-25v48l-45 25V64Z" fill="#164699"/><path d="m34 30 46 24 12-7-46-23-12 6Z" fill="#ffc16e"/><path d="m80 54 12-7v22l-12 7V54Z" fill="#ff941f"/><path d="m27 70 21 11m-21-1 13 7" stroke="#c1d6ff" stroke-width="3" stroke-linecap="round"/></svg></div>
+        <a class="ad-action" href="https://www.17track.net/en">Track a package ↗</a>
+        <span class="ad-caption">A static sample ad for layout preview</span>
+      </aside>
+    </div>
+    <canvas class="zip-globe" id="zip-globe" aria-hidden="true"></canvas>
+  </section>
+
+  <!-- ============================================================ Results -->
+  <section class="hs-results" id="results" aria-labelledby="results-title" hidden>
+    <div class="shell">
+      <div class="zip-section-head">
+        <div class="hs-results-title">
+          <p class="hs-kicker" id="results-kicker">Results</p>
+          <h2 id="results-title">Results</h2>
+          <span class="hs-count" id="results-count" hidden></span>
+        </div>
+        <button class="btn btn-outline btn-sm" type="button" id="edit-search">Edit<span class="hide-sm"> search</span></button>
+      </div>
+      <p class="hs-results-lede" id="results-meta"></p>
+      <div id="results-body"></div>
+    </div>
+  </section>
+
+  <!-- ============================================================ Chapters -->
+  <section class="hs-section" id="chapters" aria-labelledby="chap-title">
+    <div class="zip-section-head">
+      <h2 id="chap-title">Browse by chapter</h2>
+      <a href="#hts-what">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+        <span>How codes are built</span>
+      </a>
+    </div>
+    <p class="hs-section-sub">The tariff schedule runs in chapter order, from live animals to special provisions. Open a range and drill it down: chapter, then heading, then subheading. Each six-digit answer adds the U.S. ten-digit line and duty alongside.</p>
+    <div class="chapter-grid" id="chapter-grid"></div>
+    <p class="hs-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+      <span>Every range except 99 carries at least one six-digit line in this demo, and only chapters with lines are listed inside a range. Chapter 99 is reserved for country-specific provisions, so it opens a short note instead of a list.</span>
+    </p>
+  </section>
+
+  <!-- ============================================================ How to use -->
+  <section class="hs-section" id="hts-how-use" aria-labelledby="hts-how-use-title">
+    <div class="hs-guide-split">
+      <div class="hs-guide-side">
+        <h2 id="hts-how-use-title">How to Use the HTS Code Lookup Tool</h2>
+        <p class="hs-section-sub">Find potential U.S. HTS classifications, then review the result against the product and the current tariff schedule.</p>
+        <button class="btn btn-primary btn-sm" type="button" id="guide-lookup">Start with a product search</button>
+        <p class="hs-guide-note">Have a code already? Enter six or ten digits instead.</p>
+      </div>
+      <div class="hs-guide-body">
+        <ol class="hs-steps">
+          <li class="hs-step">
+            <span class="hs-step-n" aria-hidden="true">1</span>
+            <div>
+              <h3>Enter a specific product description</h3>
+              <p>Include the material, intended use and product type. Search for “men’s knitted cotton T-shirt” rather than simply “clothing.”</p>
+            </div>
+          </li>
+          <li class="hs-step">
+            <span class="hs-step-n" aria-hidden="true">2</span>
+            <div>
+              <h3>Review potential matches</h3>
+              <p>Compare the codes and descriptions in the results, and keep the classifications that match the product’s actual characteristics.</p>
+            </div>
+          </li>
+          <li class="hs-step">
+            <span class="hs-step-n" aria-hidden="true">3</span>
+            <div>
+              <h3>Verify the complete code</h3>
+              <p>Confirm the full ten-digit reporting number required for a U.S. import declaration. A search result is a starting point, not a final classification based on keywords alone.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ What is an HTS code -->
+  <section class="hs-band" id="hts-what" aria-labelledby="hts-what-title">
+    <div class="hs-section">
+      <h2 id="hts-what-title">What Is an HTS Code?</h2>
+      <div class="hs-basics-cols">
+        <p class="lead">HTS stands for Harmonized Tariff Schedule. In the United States, HTS codes, also called HTSUS codes, classify imported goods. A complete U.S. HTS statistical reporting number contains ten digits and builds on the internationally standardized six-digit Harmonized System (HS).</p>
+        <p>HTS codes help customs officials identify a product’s classification. Together with details such as country of origin and customs value, they support duty assessment, the application of trade measures and import statistics. The U.S. International Trade Commission publishes the HTSUS; U.S. Customs and Border Protection administers it at importation.</p>
+      </div>
+
+      <div class="hs-anatomy">
+        <p class="sr-only">A U.S. HTS code has ten digits. Digits 1 and 2 are the chapter, 3 and 4 the heading, 5 and 6 the subheading, and 7 to 10 the U.S. tariff and statistical suffix.</p>
+        <div class="hs-strip">
+          <div class="hs-digit-row" aria-hidden="true">
+            <span class="hs-digit is-hs">6</span><span class="hs-digit is-hs">1</span>
+            <span class="hs-digit is-hs">0</span><span class="hs-digit is-hs">9</span>
+            <span class="hs-digit is-hs">1</span><span class="hs-digit is-hs">0</span>
+            <span class="hs-digit-gap"></span>
+            <span class="hs-digit is-local">0</span><span class="hs-digit is-local">0</span><span class="hs-digit is-local">1</span><span class="hs-digit is-local">0</span>
+          </div>
+
+          <div class="hs-brace-row hs-brace-row-parts" aria-hidden="true">
+            <span class="hs-brace" style="grid-column:1/3"><i>Chapter</i></span>
+            <span class="hs-brace" style="grid-column:3/5"><i>Heading</i></span>
+            <span class="hs-brace" style="grid-column:5/7"><i>Subheading</i></span>
+          </div>
+
+          <div class="hs-brace-row" aria-hidden="true">
+            <span class="hs-brace is-hs is-up" style="grid-column:1/7"><i>HS code · 6 digits</i></span>
+            <span class="hs-brace is-up" style="grid-column:8/12"><i>U.S. HTS line · digits 7–10</i></span>
+          </div>
+
+          <div class="hs-legend" aria-hidden="true">
+            <span class="hs-legend-item"><span class="hs-legend-dot is-hs"></span>International, six digits</span>
+            <span class="hs-legend-item"><span class="hs-legend-dot is-local"></span>U.S. tariff and statistical suffix</span>
+          </div>
+        </div>
+
+        <div class="hs-anatomy-notes">
+          <div class="hs-anatomy-note">
+            <span>Digits 1–2</span>
+            <h3>Chapter</h3>
+            <p>The broad product family. Chapter 01 covers live animals; 61 covers apparel.</p>
+          </div>
+          <div class="hs-anatomy-note">
+            <span>Digits 3–4</span>
+            <h3>Heading</h3>
+            <p>A narrower group inside the chapter. 0101 covers live horses, asses, mules and hinnies; 6109 covers T-shirts.</p>
+          </div>
+          <div class="hs-anatomy-note">
+            <span>Digits 5–6</span>
+            <h3>Subheading</h3>
+            <p>The six-digit level shared by every country. 010121 narrows 0101 to pure-bred breeding horses.</p>
+          </div>
+          <div class="hs-anatomy-note">
+            <span>Digits 7–10</span>
+            <h3>U.S. HTS suffix</h3>
+            <p>The HTSUS closes the legal line at eight digits, then adds a two-digit statistical suffix. Together they form the ten-digit HTS code, and each line carries its own General, Special and Column 2 duty rate.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ Compare the systems -->
+  <section class="hs-section" id="hts-compare" aria-labelledby="hts-compare-title">
+    <h2 id="hts-compare-title">HS Code vs. HTS Code vs. Schedule B</h2>
+    <p class="hs-section-sub">HS codes, HTS codes and Schedule B numbers all classify goods, but they serve different purposes. The HS provides the international framework, the U.S. HTS classifies imports, and Schedule B is used for U.S. export statistics.</p>
+
+    <div class="hs-sys-table-wrap" style="margin-top:22px">
+      <table class="hs-sys-table is-compare">
+        <colgroup><col style="width:20%"><col style="width:26%"><col style="width:27%"><col style="width:27%"></colgroup>
+        <thead>
+          <tr><th scope="col">Feature</th><th scope="col">HS code</th><th scope="col">U.S. HTS code</th><th scope="col">Schedule B</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Primary purpose</td><td>International product classification</td><td>U.S. import classification and reporting</td><td>U.S. export statistical reporting</td></tr>
+          <tr><td>Code length</td><td>6 digits</td><td>10 digits for a complete statistical reporting number</td><td>10 digits</td></tr>
+          <tr><td>Scope</td><td>International</td><td>Imports into the United States</td><td>Exports from the United States</td></tr>
+          <tr><td>Relationship to the HS</td><td>Base classification system</td><td>Extends the HS with U.S. tariff and statistical subdivisions</td><td>Extends the HS with U.S. export statistical subdivisions</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hs-table-note">The final four digits of an HTS code and a Schedule B number can differ, so they should not be treated as interchangeable. A supplier’s six-digit HS code can start your search, but the full code required for a U.S. import declaration still has to be verified.</p>
+  </section>
+
+  <!-- ============================================================ How to determine -->
+  <section class="hs-band" id="hts-determine" aria-labelledby="hts-determine-title">
+    <div class="hs-section">
+      <div class="hs-guide-split">
+        <div class="hs-guide-side">
+          <h2 id="hts-determine-title">How to Determine the HTS Code for Your Product</h2>
+          <p class="hs-section-sub">Determining an HTS code involves more than searching for a product name. The classification depends on the product’s characteristics, the tariff language and the applicable rules.</p>
+        </div>
+        <div class="hs-guide-body">
+          <ol class="hs-steps">
+            <li class="hs-step">
+              <span class="hs-step-n" aria-hidden="true">1</span>
+              <div>
+                <h3>Gather the product details</h3>
+                <p>Identify the material, composition, primary function and relevant technical specifications. Establish whether it is a finished product, an unfinished item, a component, or part of a set.</p>
+              </div>
+            </li>
+            <li class="hs-step">
+              <span class="hs-step-n" aria-hidden="true">2</span>
+              <div>
+                <h3>Compare potential classifications</h3>
+                <p>Use the lookup to find relevant entries, then compare the descriptions of possible headings and subheadings. Do not select the first result simply because its wording sounds similar.</p>
+              </div>
+            </li>
+            <li class="hs-step">
+              <span class="hs-step-n" aria-hidden="true">3</span>
+              <div>
+                <h3>Review the classification rules and legal notes</h3>
+                <p>Apply the General Rules of Interpretation and review the relevant Section and Chapter Notes. Products with similar names can still require different classifications.</p>
+              </div>
+            </li>
+            <li class="hs-step">
+              <span class="hs-step-n" aria-hidden="true">4</span>
+              <div>
+                <h3>Confirm the full ten-digit code</h3>
+                <p>Follow the hierarchy: the first four digits identify the heading, the first six the HS subheading, the first eight the U.S. tariff provision, and the final two the statistical suffix.</p>
+              </div>
+            </li>
+            <li class="hs-step">
+              <span class="hs-step-n" aria-hidden="true">5</span>
+              <div>
+                <h3>Resolve any uncertainty</h3>
+                <p>Check the current HTSUS and relevant CBP classification rulings. For complex or uncertain classifications, consult a customs broker or consider requesting a binding ruling from CBP.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ Common mistakes -->
+  <section class="hs-section" id="hts-mistakes" aria-labelledby="hts-mistakes-title">
+    <div class="hs-guide-split">
+      <div class="hs-guide-side">
+        <h2 id="hts-mistakes-title">Common Mistakes to Avoid During an HTS Code Search</h2>
+        <p class="hs-section-sub">Finding a relevant code does not necessarily mean you have found the correct classification.</p>
+      </div>
+      <div class="hs-guide-body">
+        <div class="hs-sys-table-wrap">
+          <table class="hs-sys-table is-mistakes">
+            <colgroup><col style="width:42%"><col style="width:58%"></colgroup>
+            <thead>
+              <tr><th scope="col">Common mistake</th><th scope="col">How to avoid it</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Choosing a code based only on the product name</td><td>Check the material, function, specifications and applicable legal notes, not just matching keywords.</td></tr>
+              <tr><td>Using a six-digit HS code as the complete U.S. reporting number</td><td>Verify the full ten-digit HTS statistical reporting number.</td></tr>
+              <tr><td>Copying a supplier’s code without checking it</td><td>Confirm that the code matches the actual product and the U.S. import classification system.</td></tr>
+              <tr><td>Treating Schedule B and HTS codes as interchangeable</td><td>Distinguish U.S. export statistical reporting from import declaration requirements.</td></tr>
+              <tr><td>Reusing an outdated code</td><td>Check the current schedule for changes to codes, statistical suffixes and tariff provisions.</td></tr>
+              <tr><td>Assuming the base duty rate is the total import charge</td><td>Review origin, customs value, preferential treatment and any additional duties or trade measures.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="hs-table-note">These checks reduce classification and reporting errors, but they do not replace a product-specific review of the current requirements.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ FAQ -->
+  <section class="hs-faq" id="faqs" aria-labelledby="faq-title">
+    <h2 id="faq-title">HTS Code Lookup FAQs</h2>
+    <p class="hs-section-sub">Classification questions that come up before a U.S. import declaration.</p>
+    <div class="faq">
+      <details>
+        <summary>
+          <span>Are HTS codes universal?</span>
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        </summary>
+        <p class="ans">No. U.S. HTS codes are specific to U.S. imports. Their first six digits follow the international HS framework, but the additional U.S. subdivisions are not universal. Other countries may require a different complete declaration code.</p>
+      </details>
+      <details>
+        <summary>
+          <span>How many digits are in an HTS code?</span>
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        </summary>
+        <p class="ans">A complete U.S. HTS statistical reporting number has ten digits. The first six identify the international HS classification, digits seven and eight identify the U.S. tariff subdivision, and the final two form the statistical suffix. Shorter numbers in the schedule represent broader classification levels.</p>
+      </details>
+      <details>
+        <summary>
+          <span>How many HTS codes are there?</span>
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        </summary>
+        <p class="ans">The U.S. HTS contains tens of thousands of classification entries. The exact count depends on the schedule revision and on whether you count eight-digit tariff provisions or ten-digit statistical reporting numbers. There is no single fixed total that applies to every edition.</p>
+      </details>
+      <details>
+        <summary>
+          <span>What is the difference between an ECCN and an HTS code?</span>
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        </summary>
+        <p class="ans">An HTS code classifies imported goods for tariff and statistical purposes. An Export Control Classification Number is a five-character alphanumeric designation used to identify items on the U.S. Commerce Control List for export-control purposes. The two systems are not interchangeable. An HTS code does not establish a product’s ECCN or, by itself, determine whether an export license is required.</p>
+      </details>
+      <details>
+        <summary>
+          <span>Does an HTS code tell me how much import duty I will pay?</span>
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        </summary>
+        <p class="ans">Not by itself. An HTS code helps identify the applicable tariff provision, but the final amount can also depend on customs value, country of origin, preferential treatment and additional duties. The base duty rate shown in a lookup result may not reflect the total import cost.</p>
+      </details>
+      <details>
+        <summary>
+          <span>How often are HTS codes updated?</span>
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        </summary>
+        <p class="ans">The HTSUS can be revised multiple times within a year. Before reusing a previously assigned code, check the current edition for changes to the classification, statistical suffix or applicable tariff provisions.</p>
+      </details>
+      <details>
+        <summary>
+          <span>Who is responsible for choosing the correct HTS code?</span>
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke-linecap="round"/></svg>
+        </summary>
+        <p class="ans">The importer of record is responsible for exercising reasonable care when declaring a product’s classification, even when using a customs broker. CBP may review the declaration and determine whether the classification is correct.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============================================================ Tracking panel -->
+  <section class="hs-panel" aria-label="Track packages on 17TRACK">
+    <div class="hs-panel-inner">
+      <div class="hs-panel-copy">
+        <h2>Already shipped?</h2>
+        <p>Use your tracking number to check your parcel’s delivery progress.</p>
+        <p class="fine">Parcel tracking uses tracking numbers only — HS codes do not identify shipments.</p>
+        <a class="btn btn-primary btn-lg" href="https://www.17track.net/en">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          Go to package tracking
+        </a>
+      </div>
+      <div class="hs-panel-art" aria-hidden="true">
+        <svg viewBox="0 0 360 250" fill="none">
+          <defs><linearGradient id="hs-parcel2" x1="90" y1="70" x2="260" y2="230" gradientUnits="userSpaceOnUse"><stop stop-color="#3971d1"/><stop offset="1" stop-color="#0039a6"/></linearGradient></defs>
+          <circle cx="196" cy="120" r="104" fill="#eef2fb"/>
+          <path d="M64 168C40 92 108 30 186 48s52 108 122 104" stroke="#9ab4e2" stroke-width="2" stroke-dasharray="4 6" stroke-linecap="round"/>
+          <path d="m286 132 30 8-24 20 1-13-7-15Z" fill="#ff820d"/>
+          <rect x="118" y="52" width="152" height="40" rx="9" fill="#fff" stroke="#d9e2f0"/>
+          <text x="134" y="79" font-family="Inter,Arial,sans-serif" font-size="20" font-weight="700" fill="#003a9b">6109.10</text>
+          <path d="M216 70h38M216 80h24" stroke="#c7d4e8" stroke-width="3" stroke-linecap="round"/>
+          <ellipse cx="170" cy="224" rx="96" ry="11" fill="#dce5f5"/>
+          <path d="m92 116 77-40 79 39-77 42-79-41Z" fill="#82a4e0"/>
+          <path d="m92 116 79 41v65l-79-42v-64Z" fill="url(#hs-parcel2)"/>
+          <path d="m171 157 77-42v65l-77 42v-65Z" fill="#002b80"/>
+          <path d="m124 99 79 40 17-9-79-40-17 9Z" fill="#ffc375"/>
+          <path d="m203 139 17-9v29l-17 10v-30Z" fill="#ff981f"/>
+          <path d="m110 158 30 16m-30-6 20 11" stroke="#bfd3f6" stroke-width="3" stroke-linecap="round"/>
+          <rect x="236" y="176" width="96" height="40" rx="9" fill="#fff" stroke="#d9e2f0"/>
+          <circle cx="256" cy="196" r="9" fill="#e9f6ef"/>
+          <path d="m252 196 3 3 6-6" stroke="#319768" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M274 190h44M274 200h28" stroke="#c7d4e8" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+</main>
+<footer class="footer_footer__FTcpD site-footer"><div class="site-footer-inner"><div class="site-footer-main"><section class="site-footer-brand"><a class="site-footer-logo" href="https://www.17track.net/en" aria-label="17TRACK"><img src="assets/footer/logo-footer.svg" alt="17TRACK" width="150" height="24" decoding="async"></a><div class="site-footer-who"><h3>Who We Are</h3><p>Track all your orders in one place. Sign up to get notifications at every step, and keep your orders organized and managed here.</p></div><div class="site-footer-badges" aria-label="17TRACK apps"><a href="https://apps.apple.com/cn/app/17track-国际物流轨迹查询/id6761287858" target="_blank" rel="noreferrer"><img src="assets/footer/badge-appstore.png" alt="Download on the App Store" width="154" height="44" decoding="async"></a><a href="https://play.google.com/store/apps/details?id=yqtrack.app" target="_blank" rel="noreferrer"><img src="assets/footer/badge-googleplay.png" alt="Get it on Google Play" width="154" height="44" decoding="async"></a></div><div class="site-footer-social" aria-label="Social links"><button type="button" class="site-footer-social-link footer_fa-wechat__nhaTI" data-social="fa-wechat" aria-label="微信" title="微信"><span class="fa-wechat footer_fa-wechat__nhaTI" aria-hidden="true"></span><span class="site-footer-popover footer_popover__Wgikp footer_wx-code__V24mr"></span></button><button type="button" class="site-footer-social-link footer_fa-weibo__cQPxR" data-social="fa-weibo" aria-label="新浪微博" title="新浪微博"><span class="fa-weibo footer_fa-weibo__cQPxR" aria-hidden="true"></span><span class="site-footer-popover footer_popover__Wgikp footer_wb-code__A7vvZ"></span></button><a class="site-footer-social-link footer_fa-facebook__Kke6w" data-social="fa-facebook" href="https://www.facebook.com/17track" target="_blank" rel="noreferrer" aria-label="Facebook"><span class="fa-facebook footer_fa-facebook__Kke6w" aria-hidden="true"></span></a><a class="site-footer-social-link footer_fa-twitter__qGdQo" data-social="fa-twitter" href="https://twitter.com/17track" target="_blank" rel="noreferrer" aria-label="Twitter"><span class="fa-twitter footer_fa-twitter__qGdQo" aria-hidden="true"></span></a><a class="site-footer-social-link" data-social="linkedin" href="https://www.linkedin.com/company/17track" target="_blank" rel="noreferrer" aria-label="LinkeIn"><img src="assets/footer/linke_in.svg" alt="LinkeIn" width="24" height="24" decoding="async"></a><a class="site-footer-social-link" data-social="youtube" href="https://www.youtube.com/@17TRACKOFFICIAL" target="_blank" rel="noreferrer" aria-label="Youtube"><img src="assets/footer/youtube.svg" alt="Youtube" width="24" height="24" decoding="async"></a></div></section><nav class="site-footer-nav" aria-label="Footer"><div class="site-footer-col"><h3>About</h3><a href="https://www.17track.net/en/about?" target="_self">About us</a><a href="https://www.17track.net/en/about/licensing?" target="_self">Terms</a><a href="https://www.17track.net/en/about/privacy?" target="_self">Privacy</a><a href="https://www.17track.net/en/about/copyright?" target="_self">Copyright</a><a href="https://www.17track.net/en/about/dpa?" target="_self">DPA</a></div><div class="site-footer-col"><h3>User Guide</h3><a href="https://www.17track.net//help.17track.net/hc/en-us/articles/228250808?" target="_self">Instruction manual</a><a href="https://www.17track.net//help.17track.net/hc/en-us/articles/228084227?" target="_self">Package status</a><a href="https://www.17track.net//help.17track.net/hc/en-us/articles/228084247?" target="_self">Tracking status</a><a href="https://www.17track.net//help.17track.net/hc/en-us/articles/228084367?" target="_self">Shipping tips</a><a href="https://www.17track.net/en/tracking" target="_blank" rel="noreferrer">Tracking page</a><a href="https://www.17track.net/en/brands" target="_blank" rel="noreferrer">Brands</a></div><div class="site-footer-col"><h3>Help</h3><a href="https://www.17track.net/en/about/contactus?" target="_self">Contact us</a><a href="https://www.17track.net//help.17track.net/hc/en-us?" target="_self">Help center</a><a href="https://www.17track.net//help.17track.net/hc/en-us/articles/228084447?" target="_self">Suggestion &amp; Feedback</a><a href="https://www.17track.net//www.17track.net/en/donate?" target="_self">Donate</a><a href="https://www.17track.net/en/links" target="_self">Partners</a><a href="https://www.17track.net/en/blog" target="_self">Blog</a></div></nav></div><div class="site-footer-bottom"><div class="site-footer-bottom-inner"><div class="site-footer-bottom-left"><details class="footer_langWrap__LmkDQ"><summary class="site-footer-lang">English<span aria-hidden="true">⌃</span></summary><div class="custom-scroll dropdown_lang_custom-dropdown-menu__R6a4a dropdown_lang_footer__qAowi"><div><div class="dropdown_lang_list-group-menu__CInRY"><a target="_blank" rel="noreferrer" href="https://help.17track.net/hc/en/articles/235533167" title="Help us translate">Help us translate</a></div><div class="dropdown_lang_divider__7mPee"></div><div class="dropdown_lang_list-group-menu__CInRY dropdown_lang_active__0ktWv"><a title="English" aria-current="true" href="https://www.17track.net/en"><div>English</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="简体中文" href="https://www.17track.net/zh-cn"><div>简体中文</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="繁體中文" href="https://www.17track.net/zh-hk"><div>繁體中文</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Русский" href="https://www.17track.net/ru"><div>Русский</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Español" href="https://www.17track.net/es"><div>Español</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Português" href="https://www.17track.net/pt"><div>Português</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Français" href="https://www.17track.net/fr"><div>Français</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Italiano" href="https://www.17track.net/it"><div>Italiano</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Deutsch" href="https://www.17track.net/de"><div>Deutsch</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Türkçe" href="https://www.17track.net/tr"><div>Türkçe</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Čeština" href="https://www.17track.net/cs"><div>Čeština</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="日本語" href="https://www.17track.net/ja"><div>日本語</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="한국어" href="https://www.17track.net/ko"><div>한국어</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Nederlands" href="https://www.17track.net/nl"><div>Nederlands</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Suomi" href="https://www.17track.net/fi"><div>Suomi</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Polski" href="https://www.17track.net/pl"><div>Polski</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Українська" href="https://www.17track.net/uk"><div>Українська</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Magyar" href="https://www.17track.net/hu"><div>Magyar</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Svenska" href="https://www.17track.net/sv"><div>Svenska</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Қазақша" href="https://www.17track.net/kk"><div>Қазақша</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Ελληνικά" href="https://www.17track.net/el"><div>Ελληνικά</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="ภาษาไทย" href="https://www.17track.net/th"><div>ภาษาไทย</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Български" href="https://www.17track.net/bg"><div>Български</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Slovenčina" href="https://www.17track.net/sk"><div>Slovenčina</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Lietuvių" href="https://www.17track.net/lt"><div>Lietuvių</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Română" href="https://www.17track.net/ro"><div>Română</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Norsk" href="https://www.17track.net/no"><div>Norsk</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Shqip" href="https://www.17track.net/sq"><div>Shqip</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Slovenščina" href="https://www.17track.net/sl"><div>Slovenščina</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Српски" href="https://www.17track.net/sr"><div>Српски</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Azərbaycan" href="https://www.17track.net/az"><div>Azərbaycan</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Dansk" href="https://www.17track.net/da"><div>Dansk</div></a></div><div class="dropdown_lang_list-group-menu__CInRY"><a title="Македонски" href="https://www.17track.net/mk"><div>Македонски</div></a></div></div></div></details><div class="site-footer-legal"><a href="https://www.17track.net/en/about/privacy">Privacy</a><a href="https://www.17track.net/en/about/copyright">Copyright</a><a href="https://www.17track.net/en/contact-us">Contact us</a></div></div><p class="site-footer-copy">© Copyright 2011-<!-- -->2026<!-- --> 17TRACK All Rights Reserved&nbsp;<a target="_blank" href="https://beian.miit.gov.cn" rel="nofollow noreferrer">粤ICP备11015089号</a></p></div></div></div></footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="sr-only" id="live-status" role="status" aria-live="polite"></div>
+
+<script src="assets/hs-data.js"></script>
+<script src="assets/globe.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(function () {
+  "use strict";
+  var resources = document.querySelector(".nav-drop");
+  var mega = document.getElementById("resources-mega");
+  if (!resources || !mega) return;
+  var items = Array.prototype.slice.call(mega.querySelectorAll(".nav-mega-item"));
+  var panels = Array.prototype.slice.call(mega.querySelectorAll("[data-preview-panel]"));
+  function showPreview(key) {
+    items.forEach(function (item) {
+      item.classList.toggle("is-active", item.getAttribute("data-preview") === key);
+    });
+    panels.forEach(function (panel) {
+      panel.classList.toggle("is-hidden", panel.getAttribute("data-preview-panel") !== key);
+    });
+  }
+  items.forEach(function (item) {
+    item.addEventListener("mouseenter", function () { showPreview(item.getAttribute("data-preview")); });
+    item.addEventListener("focus", function () { showPreview(item.getAttribute("data-preview")); });
+  });
+  var head = document.querySelector(".site-head");
+  var megaInner = mega.querySelector(".nav-mega-inner");
+  // Fit the panel list to whatever room is left under the sticky header.
+  // --head-h alone is not enough: at scroll 0 the notice bar still pushes the
+  // header down, and the panel would run past the bottom of the window.
+  function fitPanel() {
+    if (!megaInner) return;
+    if (!resources.open) {
+      megaInner.style.maxHeight = "";
+      return;
+    }
+    var top = mega.getBoundingClientRect().top;
+    megaInner.style.maxHeight = Math.max(180, Math.round(window.innerHeight - top - 12)) + "px";
+    megaInner.scrollTop = 0;
+  }
+  resources.addEventListener("toggle", fitPanel);
+  window.addEventListener("resize", fitPanel);
+  document.addEventListener("pointerdown", function (event) {
+    if (!resources.open || (head && head.contains(event.target))) return;
+    resources.open = false;
+  });
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") resources.open = false;
+  });
+  // The mega panel paints a viewport-high white curtain under the sticky
+  // header, so anything below it looks blank once the page scrolls. Close the
+  // panel as soon as the page starts scrolling, but leave scrolls that happen
+  // inside the panel alone so its own list still works on short windows.
+  var lastY = window.scrollY;
+  window.addEventListener("scroll", function () {
+    var y = window.scrollY;
+    if (resources.open && Math.abs(y - lastY) > 2) resources.open = false;
+    lastY = y;
+  }, { passive: true });
+  window.addEventListener("wheel", function (event) {
+    if (!resources.open) return;
+    if (!mega.contains(event.target)) {
+      resources.open = false;
+      return;
+    }
+    // On short windows the list fills the whole window, so wheeling past its
+    // end is the normal way back to the page: keep going and it closes.
+    var atTop = megaInner.scrollTop <= 0;
+    var atEnd = megaInner.scrollTop + megaInner.clientHeight >= megaInner.scrollHeight - 1;
+    if ((event.deltaY < 0 && atTop) || (event.deltaY > 0 && atEnd)) resources.open = false;
+  }, { passive: true });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  // The phone menu holds fourteen links. On a short screen it used to run past
+  // the bottom of the window with nothing to scroll, so the last buttons could
+  // never be tapped. Measure the real space under the header and cap the list.
+  var menu = document.querySelector(".head-actions details.menu");
+  if (!menu) return;
+  var panel = menu.querySelector(".menu-panel");
+  var inner = menu.querySelector(".menu-panel-inner");
+
+  function fitMenu() {
+    if (!panel || !inner) return;
+    if (!menu.open) {
+      inner.style.maxHeight = "";
+      return;
+    }
+    var top = panel.getBoundingClientRect().top;
+    // The panel adds 8px padding on each side plus 1px borders, so the list
+    // gets what is left after those and a small gap from the window edge.
+    var chrome = 18 + 12;
+    var avail = Math.max(180, Math.round(window.innerHeight - top - chrome));
+    inner.style.maxHeight = avail + "px";
+    inner.scrollTop = 0;
+  }
+
+  menu.addEventListener("toggle", fitMenu);
+  window.addEventListener("resize", fitMenu);
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") menu.open = false;
+  });
+  document.addEventListener("pointerdown", function (event) {
+    if (menu.open && !menu.contains(event.target)) menu.open = false;
+  });
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  document.querySelectorAll(".faq details").forEach(function (item) {
+    var summary = item.querySelector("summary");
+    var animation;
+    var finishTimer;
+    var expanded = item.open;
+    summary.setAttribute("aria-expanded", String(expanded));
+    function toggle(open) {
+      expanded = open;
+      summary.setAttribute("aria-expanded", String(open));
+      var start = item.getBoundingClientRect().height;
+      window.clearTimeout(finishTimer);
+      if (animation) { animation.cancel(); animation = null; }
+      item.style.height = "";
+      item.open = true;
+      var end = open ? item.getBoundingClientRect().height : summary.getBoundingClientRect().height + parseFloat(getComputedStyle(item).borderBottomWidth);
+      if (!item.animate || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        item.open = open;
+        return;
+      }
+      item.style.overflow = "hidden";
+      animation = item.animate([{height:start + "px"}, {height:end + "px"}], {duration:240, easing:"cubic-bezier(.25,.8,.25,1)"});
+      function finish() {
+        window.clearTimeout(finishTimer);
+        item.open = expanded;
+        item.style.overflow = "";
+        if (animation) animation.cancel();
+        animation = null;
+      }
+      animation.onfinish = finish;
+      finishTimer = window.setTimeout(finish, 260);
+    }
+    summary.addEventListener("click", function (event) {
+      event.preventDefault();
+      if (!expanded) {
+        document.querySelectorAll(".faq details[open] summary").forEach(function (other) {
+          if (other !== summary && other.getAttribute("aria-expanded") === "true") other.click();
+        });
+      }
+      toggle(!expanded);
+    });
+  });
+})();
+</script>
+</body>
+</html>

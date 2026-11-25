@@ -57,6 +57,10 @@
                 <span><strong>HS Code Lookup</strong><small>Find six-digit tariff codes by product</small></span>
                 <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
               </a>
+              <a class="nav-mega-item" href="hts.html" data-preview="hts">
+                <span><strong>HTS Code Lookup</strong><small>Find the U.S. ten-digit import line</small></span>
+                <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
               <a class="nav-mega-item" href="https://www.17track.net/en/zipcode" data-preview="zip">
                 <span><strong>ZIP Code</strong><small>Look up US ZIP Codes by city and county</small></span>
                 <svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
@@ -90,6 +94,15 @@
               </div>
               <p>Describe the product or drill from chapter to six digits, then pick a destination to see the local tariff line and duty rate.</p>
               <a class="nav-mega-more" href="index.html">View more<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+            </div>
+            <div class="nav-mega-preview is-hidden" data-preview-panel="hts">
+              <div class="nav-mega-shot nav-mega-hs" aria-hidden="true">
+                <div class="nshot-code"><span class="nshot-seg">0101</span><span class="nshot-seg nshot-seg-rest">21</span><span class="nshot-seg nshot-seg-local">0010</span></div>
+                <p class="nshot-label">Pure-bred breeding horses — U.S. HTS ten-digit line</p>
+                <div class="nshot-rows"><span>HTSUS</span></div>
+              </div>
+              <p>Search a product or HS code, then confirm the ten-digit U.S. HTS line with its General and Column 2 duty rate.</p>
+              <a class="nav-mega-more" href="hts.html">View more<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
             </div>
             <div class="nav-mega-preview is-hidden" data-preview-panel="zip">
               <div class="nav-mega-shot"><img src="assets/nav/zip-code-nav.jpg" alt="" width="1600" height="600" decoding="async"></div>
@@ -165,21 +178,24 @@
         <div class="hs-tool">
           <form id="search-form" novalidate>
             <div class="hs-ctx-head">
-              <h3 class="hs-ctx-title">Choose a direction and destination</h3>
+              <div class="hs-ctx-head-row">
+                <h3 class="hs-ctx-title">Choose a direction and destination</h3>
+                <a class="hs-ctx-link" href="hts.html">Looking for HTS Code?</a>
+              </div>
               <p class="hs-ctx-sub">Optional — choose import or export and a market, or leave it blank and pick a destination after the six-digit code.</p>
             </div>
             <div class="hs-opt-row">
+              <div class="hs-opt">
+                <span class="hs-label" id="ctx-dest">Destination</span>
+                <div class="hs-chips" role="group" aria-labelledby="ctx-dest">
+                  <button class="hs-chip" type="button" data-market="US" aria-pressed="false">United States</button>
+                </div>
+              </div>
               <div class="hs-opt">
                 <span class="hs-label" id="ctx-title">Goods moving</span>
                 <div class="hs-chips" role="group" aria-labelledby="ctx-title">
                   <button class="hs-chip" type="button" data-move="import" aria-pressed="false">Import</button>
                   <button class="hs-chip" type="button" data-move="export" aria-pressed="false">Export</button>
-                </div>
-              </div>
-              <div class="hs-opt">
-                <span class="hs-label" id="ctx-dest">Destination</span>
-                <div class="hs-chips" role="group" aria-labelledby="ctx-dest">
-                  <button class="hs-chip" type="button" data-market="US" aria-pressed="false">United States</button>
                 </div>
               </div>
             </div>
@@ -294,27 +310,28 @@
     <div class="hs-anatomy">
       <p class="sr-only">An HS code has ten digits. Digits 1 and 2 are the chapter, 3 and 4 the heading, 5 and 6 the subheading, and 7 to 10 the country classification.</p>
       <div class="hs-strip">
-        <div class="hs-anat-row">
-          <div class="hs-group is-hs">
-            <div class="hs-group-digits"><span class="hs-digit">6</span><span class="hs-digit">1</span></div>
-            <span class="hs-group-cap"><b>Chapter</b><span>Digits 1–2</span></span>
-          </div>
-          <div class="hs-group is-hs">
-            <div class="hs-group-digits"><span class="hs-digit">0</span><span class="hs-digit">9</span></div>
-            <span class="hs-group-cap"><b>Heading</b><span>Digits 3–4</span></span>
-          </div>
-          <div class="hs-group is-hs">
-            <div class="hs-group-digits"><span class="hs-digit">1</span><span class="hs-digit">0</span></div>
-            <span class="hs-group-cap"><b>Subheading</b><span>Digits 5–6</span></span>
-          </div>
-          <div class="hs-group is-local">
-            <div class="hs-group-digits"><span class="hs-digit">0</span><span class="hs-digit">0</span><span class="hs-digit">1</span><span class="hs-digit">0</span></div>
-            <span class="hs-group-cap"><b>U.S. HTS line</b><span>Digits 7–10</span></span>
-          </div>
+        <div class="hs-digit-row" aria-hidden="true">
+          <span class="hs-digit is-hs">6</span><span class="hs-digit is-hs">1</span>
+          <span class="hs-digit is-hs">0</span><span class="hs-digit is-hs">9</span>
+          <span class="hs-digit is-hs">1</span><span class="hs-digit is-hs">0</span>
+          <span class="hs-digit-gap"></span>
+          <span class="hs-digit is-local">0</span><span class="hs-digit is-local">0</span><span class="hs-digit is-local">1</span><span class="hs-digit is-local">0</span>
         </div>
-        <div class="hs-anat-legend">
-          <span class="hs-legend-tag is-hs">HS code · 6 digits</span>
-          <span class="hs-legend-tag">Country classification</span>
+
+        <div class="hs-brace-row hs-brace-row-parts" aria-hidden="true">
+          <span class="hs-brace" style="grid-column:1/3"><i>Chapter</i></span>
+          <span class="hs-brace" style="grid-column:3/5"><i>Heading</i></span>
+          <span class="hs-brace" style="grid-column:5/7"><i>Subheading</i></span>
+        </div>
+
+        <div class="hs-brace-row" aria-hidden="true">
+          <span class="hs-brace is-hs is-up" style="grid-column:1/7"><i>HS code · 6 digits</i></span>
+          <span class="hs-brace is-up" style="grid-column:8/12"><i>Country classification</i></span>
+        </div>
+
+        <div class="hs-legend" aria-hidden="true">
+          <span class="hs-legend-item"><span class="hs-legend-dot is-hs"></span>International, six digits</span>
+          <span class="hs-legend-item"><span class="hs-legend-dot is-local"></span>Country-specific, digits 7–10</span>
         </div>
       </div>
 
@@ -391,9 +408,9 @@
 
   <!-- ============================================================ Country differences -->
   <section class="hs-section" id="country-codes" aria-labelledby="country-title">
-    <h2 id="country-title">Are HS Codes Different for Each Country?</h2>
     <div class="hs-guide-split">
       <div class="hs-guide-side">
+        <h2 id="country-title">Are HS Codes Different for Each Country?</h2>
         <p>At the six-digit level the HS is internationally standardized, so the same product shares the same six-digit classification across markets. Countries and customs territories can add digits for more detail, so the full declaration code can differ even when the first six digits match.</p>
         <p class="hs-hts-ref">Shipping into the United States? Imports are filed on the ten-digit HTSUS line. <a href="https://hts.usitc.gov/" target="_blank" rel="noreferrer">Open the HTS lookup</a> to see the line and duty rate.</p>
       </div>

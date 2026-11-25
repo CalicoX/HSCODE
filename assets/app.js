@@ -8,6 +8,12 @@
   var DATA = window.HSDATA;
   if (!DATA) return;
 
+  // The HS and HTS pages share this interaction layer. Everything that differs
+  // between them hangs off this flag: the HTS page fixes the destination to the
+  // United States and answers with the ten-digit line instead of a picker.
+  var PAGE = document.body.getAttribute('data-page') || 'hs';
+  var IS_HTS = PAGE === 'hts';
+
   var HS_ENTRIES = DATA.HS_ENTRIES;
   var CH1_US = DATA.CH1_US;
   var CH1_EU = DATA.CH1_EU;
@@ -52,7 +58,8 @@
     CN: { id: 'CN', name: 'China', system: 'China Tariff', digits: 10 }
   };
 
-  /* Destinations offered in the lookup form and the result tabs. */
+  /* Destinations offered in the lookup form and the result tabs. The HTS page
+     is a United States import tool, so it carries one market by design. */
   var DESTINATIONS = ['US'];
 
   var ICON = {
@@ -93,9 +100,11 @@
     refine: null,
     expanded: {},
     destCode: null,
-    destCountry: null,
-    movement: null,
-    localCountry: null,
+    // The HTS page is a fixed United States import tool: the context bar shows
+    // it as already chosen rather than offering a choice the page cannot honour.
+    destCountry: IS_HTS ? 'US' : null,
+    movement: IS_HTS ? 'import' : null,
+    localCountry: IS_HTS ? 'US' : null,
     localDetail: {},
     wizard: null,
     treeOpen: null
@@ -449,7 +458,8 @@
           ? '<button class="hs-toggle" type="button" data-toggle="' + esc(entry.code) + '" aria-expanded="' + open + '" aria-controls="detail-' + esc(entry.code) + '">' +
             (open ? 'Hide classification details' : 'View classification details') + ICON.chevron + '</button>'
           : '') +
-        '<button class="hs-toggle" type="button" data-dest="' + esc(entry.code) + '">See destination lines ' + ICON.arrow + '</button>' +
+        '<button class="hs-toggle" type="button" data-dest="' + esc(entry.code) + '">' +
+          (IS_HTS ? 'See U.S. HTS line ' : 'See destination lines ') + ICON.arrow + '</button>' +
       '</div>' +
       '<div class="hs-detail" id="detail-' + esc(entry.code) + '"' + (open ? '' : ' hidden') + '>' +
         (entry.detail.build ? '<div><h4>How the code is built</h4><p>' + esc(entry.detail.build) + '</p></div>' : '') +
@@ -676,8 +686,9 @@
   }
 
   // Direction and market picker. DESTINATIONS only holds markets this demo
-  // actually carries data for, which is the United States alone.
-  function directionHTML(code) {
+  // actually carries data for, which is the United States alone, so the title
+  // counts the buttons it will draw instead of repeating the reference text.
+  function directionHTML(code, showPanel) {
     var countries = DESTINATIONS.map(function (id) { return COUNTRIES[id]; });
     if (!countries.length) return '';
 
@@ -698,6 +709,9 @@
         '</button>';
     }).join('');
 
+    // The reference draws a fixed "Six destinations" heading, but this demo
+    // carries the United States only. Counting the buttons keeps the heading
+    // honest, so it reads "Two directions" while a single market is offered.
     var title = options.length > 2 ? 'Six destinations for this code'
       : options.length === 2 ? 'Two directions for this code'
       : 'One direction for this code';
@@ -706,6 +720,80 @@
       '<p class="hs-dw-title">' + title + '</p>' +
       '<p class="hs-dw-sub">Pick a direction and market to see the local line and duty. Import and export rates differ.</p>' +
       '<div class="hs-dw-grid">' + buttons + '</div>' +
+      (showPanel ? directionPanelHTML(code) : '') +
+      '</div>';
+  }
+
+  // The chosen combination opens the destination lines in place, so the code
+  // lookup result needs no separate step heading and table.
+  function directionPanelHTML(code) {
+    if (!state.movement || !state.destCountry) return '';
+    var country = COUNTRIES[state.destCountry];
+    var data = localRows(code, state.destCountry);
+
+    var head = '<div class="hs-dw-head">' +
+      '<b>' + (state.movement === 'import' ? 'Import' : 'Export') + ' · ' + esc(country.name) + '</b>' +
+      '<span>' + esc(data.rows.length ? data.source : 'Demo dataset') + '</span>' +
+      '</div>';
+
+    var body = data.rows.length
+      ? data.rows.map(function (row) {
+          var rate;
+          if (state.movement === 'export') {
+            rate = 'Export side — this schedule lists import duty only';
+          } else if (row.duty) {
+            rate = 'General duty <b>' + esc(row.duty) + '</b>' +
+              (row.col2 && row.col2 !== row.duty ? ' · Column 2 ' + esc(row.col2) : '') +
+              (row.unit ? ' · Unit ' + esc(row.unit === 'No' ? 'No.' : row.unit) : '');
+          } else if (row.six) {
+            rate = 'Six-digit line';
+          } else {
+            rate = 'Rate not loaded';
+          }
+          return '<div class="hs-dw-row">' +
+            '<code>' + esc(row.code) + '</code>' +
+            '<div class="hs-dw-desc">' + esc(row.desc) + '</div>' +
+            '<div class="hs-dw-rate">' + rate + '</div>' +
+            '</div>';
+        }).join('')
+      : '<div class="hs-dw-empty">' + esc(data.note) + '</div>';
+
+    return '<div class="hs-dw-panel">' + head + body +
+      (data.rows.length ? '<div class="hs-dw-empty">' + esc(data.note) + '</div>' : '') +
+      '</div>';
+  }
+
+  // The HTS page has a single market and a single direction, so it replaces the
+  // picker with the answer itself: the ten-digit U.S. line for the selected code.
+  function htsAnswerHTML(code) {
+    var data = localRows(code, 'US');
+    var head = '<div class="hs-dw-head">' +
+      '<b>U.S. HTS line</b>' +
+      '<span>' + esc(data.source) + '</span>' +
+      '</div>';
+
+    var body = data.rows.length
+      ? data.rows.map(function (row) {
+          var rate = row.duty
+            ? 'General duty <b>' + esc(row.duty) + '</b>' +
+              (row.col2 && row.col2 !== row.duty ? ' · Column 2 ' + esc(row.col2) : '') +
+              (row.unit ? ' · Unit ' + esc(row.unit === 'No' ? 'No.' : row.unit) : '')
+            : (row.six ? 'Six-digit line' : 'Rate not loaded');
+          return '<div class="hs-dw-row">' +
+            '<code>' + esc(row.code) + '</code>' +
+            '<div class="hs-dw-desc">' + esc(row.desc) + '</div>' +
+            '<div class="hs-dw-rate">' + rate + '</div>' +
+            '</div>';
+        }).join('')
+      : '<div class="hs-dw-empty">' + esc(data.note) + '</div>';
+
+    // id="destination" is what the "See U.S. HTS line" action scrolls to.
+    return '<div class="hs-dw hs-hts-answer" id="destination">' +
+      '<p class="hs-dw-title">U.S. HTS · ten-digit line</p>' +
+      '<p class="hs-dw-sub">This is the line U.S. importers file under, with the General duty rate from the HTSUS.</p>' +
+      '<div class="hs-dw-panel">' + head + body +
+        (data.rows.length ? '<div class="hs-dw-empty">' + esc(data.note) + '</div>' : '') +
+      '</div>' +
       '</div>';
   }
 
@@ -730,12 +818,15 @@
         '<span>Candidate classifications are starting points. Confirm the material, construction and final use before you use a code.</span>' +
       '</p>' +
       (code
-        ? '<div class="hs-step-block" id="step-local">' +
-            stepHead(2, state.movement === 'import' ? 'Full import code' : 'Code at the destination',
-              COUNTRIES[country].name + ' · ' + COUNTRIES[country].system) +
-            classPickerHTML(shown, code) +
-            localTableHTML(code, country) +
-          '</div>'
+        ? (IS_HTS
+            ? htsAnswerHTML(code)
+            : directionHTML(code) +
+              '<div class="hs-step-block" id="step-local">' +
+                stepHead(2, state.movement === 'import' ? 'Full import code' : 'Code at the destination',
+                  COUNTRIES[country].name + ' · ' + COUNTRIES[country].system) +
+                classPickerHTML(shown, code) +
+                localTableHTML(code, country) +
+              '</div>')
         : '');
   }
 
@@ -743,7 +834,6 @@
     var entry = result.entry;
     var open = !!state.expanded[entry.code];
     var detailId = 'detail-code-' + entry.code;
-    var country = state.localCountry || state.destCountry || 'US';
 
     // The classification path already sits above the actions, so only the
     // expandable detail block is added here.
@@ -773,17 +863,11 @@
           details +
         '</article>' +
       '</div>' +
-      directionHTML(entry.code) +
-      '<div class="hs-step-block" id="step-local">' +
-        stepHead(2, state.movement === 'import' ? 'Full import code' : 'Code at the destination',
-          COUNTRIES[country].name + ' · ' + COUNTRIES[country].system) +
-        localTableHTML(entry.code, country) +
-      '</div>';
+      (IS_HTS ? htsAnswerHTML(entry.code) : directionHTML(entry.code, true));
   }
 
   function localcodeHTML(result) {
     var entry = result.entry;
-    var country = state.localCountry || state.destCountry || 'US';
     var explain = entry
       ? '<article class="hs-cand">' +
           '<div class="hs-cand-top"><div><span class="hs-code">' + esc(result.code) + '</span>' +
@@ -794,15 +878,10 @@
           pathHTML(entry) +
         '</article>'
       : '<div class="hs-empty">The demo dataset has no six-digit entry for ' + esc(result.code) +
-        ', so only the destination rows are shown.</div>';
+        '. Pick a direction below to see the destination rows.</div>';
 
     return '<div class="hs-cands is-single">' + explain + '</div>' +
-      directionHTML(result.code) +
-      '<div class="hs-step-block" id="step-local">' +
-        stepHead(2, state.movement === 'import' ? 'Full import code' : 'Code at the destination',
-          COUNTRIES[country].name + ' · ' + COUNTRIES[country].system) +
-        localTableHTML(result.code, country) +
-      '</div>';
+      (IS_HTS ? htsAnswerHTML(result.code) : directionHTML(result.code, true));
   }
 
   function noneHTML(result) {
@@ -923,9 +1002,11 @@
       el.meta.textContent = (result.kind === 'product'
         ? 'For “' + result.query + '”. '
         : '') + contextLabel() +
-        (state.movement && state.destCountry
-          ? ' adds ' + COUNTRIES[state.destCountry].digits + ' digits after the six-digit code.'
-          : '. Pick a destination to see the local line.');
+        (IS_HTS
+          ? '. Each candidate opens its ten-digit U.S. HTS line.'
+          : state.movement && state.destCountry
+            ? ' adds ' + COUNTRIES[state.destCountry].digits + ' digits after the six-digit code.'
+            : '. Pick a destination to see the local line.');
       return;
     }
 
@@ -1172,7 +1253,9 @@
           '<span class="tag">' + esc(dirPill) + '</span></div>' +
         '<h4>' + esc(entry.short) + '</h4>' +
         (entry.plain ? '<p>' + esc(entry.plain) + '</p>' : '') +
-        '<p class="hs-fine">Direction and destination come from the top of the page — change them there and this answer follows.</p>' +
+        '<p class="hs-fine">' + (IS_HTS
+          ? 'Ten-digit line from the HTSUS schedule for U.S. imports.'
+          : 'Direction and destination come from the top of the page — change them there and this answer follows.') + '</p>' +
         '<div class="cp-local">' + rowCopy + '</div>' +
         (entry.verify && entry.verify.length ? verifyHTML(entry.verify, 'Check before you ship') : '') +
         '<div class="hs-cand-actions">' +
